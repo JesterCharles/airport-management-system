@@ -72,8 +72,34 @@ public class AirportRunner {
                     }
                     break; //include break, otherwise it will fall through to the next case statement
                 case 2:
+                    int index =0;
                     System.out.println("Adding a flight, please enter information Airline:Destination: ");
                     // TODO: Implement the addition of flights to our arrays
+                    Scanner localScanner = new Scanner(System.in);
+                    String input = localScanner.nextLine();
+                    //Check if input is empty
+                    if(input==""){
+                        break;
+                    }
+
+                   for(int i=0;i< flights.length;i++){
+                       if(flights[i]==null){
+                           flights[i]=input;
+                           break;
+                       }
+                       index++;
+                   }
+
+                   if(flights.length==index) {
+                      for(int i=0;i< flights.length;i++){
+                          if(i!=flights.length-1){
+                          flights[i] = flights[i+1];
+                          }else {
+                              flights[i] = input;
+                          }
+
+                      }
+                   }
                     /* Paired Programming
                         driver - one person that writes the code
                         navigator(s) - individuals that guide the code along & any input they deem reasonable
