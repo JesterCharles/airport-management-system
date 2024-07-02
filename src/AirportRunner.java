@@ -77,6 +77,7 @@ public class AirportRunner {
                     // TODO: Implement the addition of flights to our arrays
                     Scanner localScanner = new Scanner(System.in);
                     String input = localScanner.nextLine();
+                    //Check if input is empty
                     if(input==""){
                         break;
                     }
@@ -88,6 +89,7 @@ public class AirportRunner {
                        }
                        index++;
                    }
+
                    if(flights.length==index) {
                       for(int i=0;i< flights.length;i++){
                           if(i!=flights.length-1){
