@@ -1,5 +1,6 @@
 package Flight;
 
+import java.time.LocalDateTime;
 import java.util.Date; //If you want to see a class you didn't implement ctrl+left-click
 
 public class Flight {
@@ -7,8 +8,8 @@ public class Flight {
     int flightNumber;
     String originAirport; // Airport identification number or String
     String destinationAirport;
-    Date timeDeparture;
-    Date timeArrival;
+    LocalDateTime timeDeparture;
+    LocalDateTime timeArrival;
     short seatCount;
     int pilot;
     int airline;
@@ -25,7 +26,7 @@ public class Flight {
     // example: new Flight(1, "PHL", "BOS".....)
     // AllArgs constructor
     public Flight(int flightNumber, String originAirport, String destinationAirport,
-                  Date timeDeparture, Date timeArrival, short seatCount, int pilot, int airline){
+                  LocalDateTime timeDeparture, LocalDateTime timeArrival, short seatCount, int pilot, int airline){
         this.flightNumber = flightNumber;
         this.originAirport = originAirport;
         this.destinationAirport = destinationAirport;
@@ -69,19 +70,19 @@ public class Flight {
         this.destinationAirport = destinationAirport;
     }
 
-    public Date getTimeDeparture() {
+    public LocalDateTime getTimeDeparture() {
         return timeDeparture;
     }
 
-    public void setTimeDeparture(Date timeDeparture) {
+    public void setTimeDeparture(LocalDateTime timeDeparture) {
         this.timeDeparture = timeDeparture;
     }
 
-    public Date getTimeArrival() {
+    public LocalDateTime getTimeArrival() {
         return timeArrival;
     }
 
-    public void setTimeArrival(Date timeArrival) {
+    public void setTimeArrival(LocalDateTime timeArrival) {
         this.timeArrival = timeArrival;
     }
 
@@ -127,7 +128,7 @@ public class Flight {
     // Custom Methods - you always would put a custom method below the generated methods
     // OOP - Polymorphism - Method Overloading
     public long calculateTravelTime(){
-        return this.timeDeparture.getTime() - this.timeArrival.getTime();
+        return this.timeDeparture.getMinute() - this.timeArrival.getMinute();
     }
 
     public long calculateTravelTime(Date timeDeparture, Date timeArrival){

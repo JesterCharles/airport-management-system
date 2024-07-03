@@ -1,4 +1,5 @@
 import Flight.FlightController;
+import Flight.FlightService;
 
 import java.util.Scanner;
 
@@ -10,7 +11,8 @@ public class AirportRunner {
         // Variables that need to be at the top we need to declare earlier
         int choice = 0;
         Scanner scanner = new Scanner(System.in);
-        FlightController flightController = new FlightController(scanner); // Instiating a FlightController Object
+        FlightService flightService = new FlightService();
+        FlightController flightController = new FlightController(scanner, flightService); // Instiating a FlightController Object
 
         // Design Step 1
         // declaring to Java what datatype the scanner variable is
@@ -19,7 +21,8 @@ public class AirportRunner {
             System.out.println("Welcome to our Airport!");
             System.out.println("1. Flight Information"); // ctrl + d on a line will repeat
             System.out.println("2. Add Flights");
-            System.out.println("3. Exit"); // sout - shorthand for System.out.println();
+            System.out.println("3. Update Flight"); // sout - shorthand for System.out.println();
+            System.out.println("4. Exit"); // sout - shorthand for System.out.println();
             System.out.println();
             System.out.println("Enter your numeric choice from above: ");
 
@@ -46,10 +49,14 @@ public class AirportRunner {
                     flightController.getFlightInfo();
                     break; //include break, otherwise it will fall through to the next case statement
                 case 2:
-                    System.out.println("Adding a flight, please enter information Airline:Destination: ");
+                    System.out.println("Adding a flight...");
                     flightController.addFlight();
                     break;
                 case 3:
+                    System.out.println("Updating a flight...");
+                    flightController.updateFlightInformation();
+                    break;
+                case 4:
                     System.out.println("Thanks for using our airpoirt services, have a wonderful day!");
                     break;
                 default:
@@ -57,7 +64,7 @@ public class AirportRunner {
 
             }
             //System.out.printf("Your choice was option %s", choice); // print formater, where %s is replaced with the variable
-        } while (choice != 3);
+        } while (choice != 4);
     }
 
 }
