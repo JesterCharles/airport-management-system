@@ -1,41 +1,23 @@
+import Flight.FlightController;
+
 import java.util.Scanner;
 
 public class AirportRunner {
     public static void main(String[] args) {
         System.out.println("Airport Management System is up and running.....");
-        // PLAN OUT OUR AIRPORT
-        // 1. View Flights
-        //      - No Flights: Message informing the users no flights are available
-        //      - Flights: List of the flights
-        // 2. Flight Records
-        //      - Airline:Destination - show a simple view of flights
-        //      - Add flights to our records
 
-        // Design our Application
-        /*
-        1. What's the first thing a user should be introduced too?
-            - Welcome message & list of options available that they can select from
-            - Java: switch case, Scanner, loop, print statements, validation users input
-        2. Ability to view flights, if there are any
-            - View available flights in our records
-            - Java: arrays or collection, validation through boolean checks, loop of print statements through our array
-             (print an array it's just a memory location), check for no flights
-        3. Flight records
-            - Be able to add records to our flights
-            - Java: Scanner to take user input, store user input in an array, validate empty input
-         */
 
         // Variables that need to be at the top we need to declare earlier
         int choice = 0;
         Scanner scanner = new Scanner(System.in);
-        String[] flights = new String[5];
+        FlightController flightController = new FlightController(scanner); // Instiating a FlightController Object
 
         // Design Step 1
         // declaring to Java what datatype the scanner variable is
         do {
 
             System.out.println("Welcome to our Airport!");
-            System.out.println("1. View Flights"); // ctrl + d on a line will repeat
+            System.out.println("1. Flight Information"); // ctrl + d on a line will repeat
             System.out.println("2. Add Flights");
             System.out.println("3. Exit"); // sout - shorthand for System.out.println();
             System.out.println();
@@ -61,33 +43,11 @@ public class AirportRunner {
             switch (choice) {
                 case 1: // If choice == 1
                     System.out.println("Viewing flight information....");
-                    if (isEmpty(flights)) {
-                        System.out.println("No flight info");
-                    } else {
-                        for (int i = 0; i < flights.length; i++) {
-                            if (flights[i] != null) { // incase any random nulls in the array, we won't print out null
-                                System.out.println(flights[i]);
-                            }
-                        }
-                    }
+                    flightController.getFlightInfo();
                     break; //include break, otherwise it will fall through to the next case statement
                 case 2:
                     System.out.println("Adding a flight, please enter information Airline:Destination: ");
-
-                    int indexToReplace = getFirstNull(flights);
-                    if (indexToReplace == -1) {
-                        System.out.println("Sorry, our flight database is full, please try again later");
-                    } else {
-                        String flightToAdd;
-                        do {
-                            System.out.println("Please enter flight info in the format 'Airline:Destination'");
-                            flightToAdd = scanner.next();
-                        } while (flightToAdd.indexOf(':') == -1);
-
-                        flights[indexToReplace] = flightToAdd;
-                        System.out.printf("Flight %s successfully added\n", flightToAdd);
-                    }
-
+                    flightController.addFlight();
                     break;
                 case 3:
                     System.out.println("Thanks for using our airpoirt services, have a wonderful day!");
@@ -100,22 +60,4 @@ public class AirportRunner {
         } while (choice != 3);
     }
 
-    // Method Signature: access-modifier optional-static return-datatype name-of-method(Datatype variable-name){}
-    public static boolean isEmpty(String[] arr) { // defining the parameter of a string array to be included when executing this mehtod
-        for (String element : arr) { // enhanced for each loop, that iterates through the arrays elements returning & assigning the value to the declared variable flight
-            if (element != null) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public static int getFirstNull(String[] arr) { //get the first null index to replace, otherwise return -1
-        for (int i = 0; i < arr.length; i++) {
-            if (arr[i] == null) {
-                return i;
-            }
-        }
-        return -1;
-    }
 }
