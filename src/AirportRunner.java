@@ -30,7 +30,7 @@ public class AirportRunner {
         Scanner scanner = new Scanner(System.in);
         String[] flights = new String[5];
 
-       // Design Step 1
+        // Design Step 1
         // declaring to Java what datatype the scanner variable is
         do {
 
@@ -43,7 +43,7 @@ public class AirportRunner {
 
             // Validate user's input is indeed an int
             // ! indicates if it's falses then it's condition has been met
-            if(!scanner.hasNextInt()){
+            if (!scanner.hasNextInt()) {
                 System.out.println("Invalid Input, Please enter a number 1-3.");
                 // because they entered not a number, we need to put the scanner to the next
                 scanner.nextLine();
@@ -61,10 +61,10 @@ public class AirportRunner {
             switch (choice) {
                 case 1: // If choice == 1
                     System.out.println("Viewing flight information....");
-                    if (isEmpty(flights)){
+                    if (isEmpty(flights)) {
                         System.out.println("No flight info");
                     } else {
-                        for(int i = 0; i < flights.length; i++) {
+                        for (int i = 0; i < flights.length; i++) {
                             if (flights[i] != null) { // incase any random nulls in the array, we won't print out null
                                 System.out.println(flights[i]);
                             }
@@ -73,16 +73,21 @@ public class AirportRunner {
                     break; //include break, otherwise it will fall through to the next case statement
                 case 2:
                     System.out.println("Adding a flight, please enter information Airline:Destination: ");
-                    // TODO: Implement the addition of flights to our arrays
-                    /* Paired Programming
-                        driver - one person that writes the code
-                        navigator(s) - individuals that guide the code along & any input they deem reasonable
 
-                        Important because we all make mistakes and sometimes they're hard to find despite being as simple
-                        as a misspelled word. Reduce the amount of bugs & roadblocks you encounter.
+                    int indexToReplace = getFirstNull(flights);
+                    if (indexToReplace == -1) {
+                        System.out.println("Sorry, our flight database is full, please try again later");
+                    } else {
+                        String flightToAdd;
+                        do {
+                            System.out.println("Please enter flight info in the format 'Airline:Destination'");
+                            flightToAdd = scanner.next();
+                        } while (flightToAdd.indexOf(':') == -1);
 
-                        Your code works & you think you've gotten all the logic done, push this up in a branch to the org repo
-                    */
+                        flights[indexToReplace] = flightToAdd;
+                        System.out.printf("Flight %s successfully added\n", flightToAdd);
+                    }
+
                     break;
                 case 3:
                     System.out.println("Thanks for using our airpoirt services, have a wonderful day!");
@@ -91,17 +96,26 @@ public class AirportRunner {
                     System.out.println("Invalid Input, Please enter a number 1-3.");
 
             }
-           //System.out.printf("Your choice was option %s", choice); // print formater, where %s is replaced with the variable
+            //System.out.printf("Your choice was option %s", choice); // print formater, where %s is replaced with the variable
         } while (choice != 3);
     }
 
     // Method Signature: access-modifier optional-static return-datatype name-of-method(Datatype variable-name){}
-    public static boolean isEmpty(String[] arr){ // defining the parameter of a string array to be included when executing this mehtod
-        for(String element : arr){ // enhanced for each loop, that iterates through the arrays elements returning & assigning the value to the declared variable flight
-            if(element !=null){
+    public static boolean isEmpty(String[] arr) { // defining the parameter of a string array to be included when executing this mehtod
+        for (String element : arr) { // enhanced for each loop, that iterates through the arrays elements returning & assigning the value to the declared variable flight
+            if (element != null) {
                 return false;
             }
         }
         return true;
+    }
+
+    public static int getFirstNull(String[] arr) { //get the first null index to replace, otherwise return -1
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] == null) {
+                return i;
+            }
+        }
+        return -1;
     }
 }
