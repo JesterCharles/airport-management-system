@@ -3,6 +3,7 @@ import Flight.FlightService;
 
 import java.util.Scanner;
 
+// FrontController Example
 public class AirportRunner {
     public static void main(String[] args) {
         System.out.println("Airport Management System is up and running.....");

@@ -1,8 +1,9 @@
-package Flight;
+﻿package Flight;
 
 import util.ScannerValidator;
+import util.exceptions.InvalidInputException;
 
-import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 import java.util.function.Predicate;
 
@@ -39,7 +40,7 @@ public class FlightController {
 
     // Method
     public void getFlightInfo() {
-        Flight[] flights = flightService.getFlightInfo();
+        Flight[] flights = flightService.findAll();
         if(flights != null){
             for (int i = 0; i < flights.length; i++) {
                 if (flights[i] != null) { // incase any random nulls in the array, we won't print out null
@@ -68,7 +69,16 @@ public class FlightController {
         short seatCount = scanner.nextShort(); // taking the int and converting it's datatype to short
 
         flightToAdd = new Flight(flightNumber, originAirport, destinationAirport, seatCount);
-        flightService.createFlight(flightToAdd);
+        try{ // "risky" code execution
+            flightService.create(flightToAdd);
+        }  catch (InvalidInputException e){ // handles any reasonable exceptions
+            e.printStackTrace();
+            System.out.println(e.getMessage()); // TODO: REPLACED WITH A LOGGER
+        } catch(RuntimeException e){
+            e.printStackTrace();
+            System.out.println("You've been caught by a random RuntimeException");
+        }
+
     }
     // TODO: Implement a method to update flight information by ID
     public void updateFlightInformation(){
@@ -86,7 +96,7 @@ public class FlightController {
 
         System.out.println("Enter time of departure date & time formatted as \"2024-07-03 15:48:00\" ");
         String timeDeparture = scanner.nextLine();
-        if(isNotEmpty.test(timeDeparture)){
+        if(!isNotEmpty.test(timeDeparture)){
             return;
         }
 
@@ -103,7 +113,15 @@ public class FlightController {
         int airline = scanner.nextInt();
         scanner.nextLine();
 
-        System.out.printf("Flight update status: ", flightService.updateFlight(flightToUpdate, timeArrival, timeDeparture, pilot, airline));
+        try {
+            System.out.printf("Flight update status: ", flightService.update(flightToUpdate, timeArrival, timeDeparture, pilot, airline));
+        } catch (InvalidInputException | DateTimeParseException e) {
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+        } catch(RuntimeException e){
+            e.printStackTrace();
+            System.out.println("Random Runtime");
+        }
     }
 
 

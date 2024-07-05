@@ -1,17 +1,21 @@
 package Flight;
 
+import Member.Member;
+import util.exceptions.InvalidInputException;
+import util.interfaces.Serviceable;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.function.Predicate;
 
 // TODO: Implement the Service Layer, this contains all Business Logic (anything that makes sense in the scope of a business)
-public class FlightService {
+public class FlightService implements Serviceable<Flight> {
     private Flight[] flights = new Flight[5];
     // -> lamba: format () -> {}, defining any parameteres used by the function and it's execution. Parenthesis not necessary for oen parameter
     private Predicate<String> isNotEmpty = str -> str != null && !str.isBlank();
 
-    public Flight[] getFlightInfo(){
+    @Override
+    public Flight[] findAll(){
         if (isEmpty(flights)) {
             System.out.println("No flight info");
             return null;
@@ -21,7 +25,8 @@ public class FlightService {
         }
     }
 
-    public void createFlight(Flight flight){
+    @Override
+    public void create(Flight flight) throws InvalidInputException {
         validateMinFlight(flight);
         int indexToReplace = getFirstNull(flights);
         if (indexToReplace == -1) {
@@ -32,6 +37,7 @@ public class FlightService {
         }
     }
 
+    @Override
     public Flight findById(int flightNumber){
         for (Flight flight : flights) {
             if (flight != null && flight.getFlightNumber()== flightNumber) {
@@ -42,8 +48,7 @@ public class FlightService {
         return null;
     }
 
-
-    public boolean updateFlight(Flight flightToUpdate, String timeArrival, String timeDeparture, int pilot, int airline) {
+    public boolean update(Flight flightToUpdate, String timeArrival, String timeDeparture, int pilot, int airline) throws InvalidInputException {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
         flightToUpdate.setTimeArrival(LocalDateTime.parse(timeArrival, formatter));
@@ -75,9 +80,10 @@ public class FlightService {
         return -1;
     }
 
-    private void validateMinFlight(Flight flight) {
+    // ducking the exception
+    private void validateMinFlight(Flight flight) throws InvalidInputException {
         if (flight == null) {
-            throw new RuntimeException();
+            throw new InvalidInputException("Flight is null as it has not been instantiated in memory");
         }
 
         // potentially bad errors with using public attributes, both reassigning the value & reading with the same expression
@@ -90,38 +96,38 @@ public class FlightService {
 
         // alt + shift : multiple cursors
         if (flight.getFlightNumber() < 1000 || flight.getFlightNumber() > 999999) {
-            throw new RuntimeException();
+            throw new InvalidInputException("Flight number needs to be a minimum of 4 digits to 6 digits long");
         }
 
         if (!isNotEmpty.test(flight.getOriginAirport()) || !isNotEmpty.test(flight.getDestinationAirport())
                 || flight.getOriginAirport().length() != 3 || flight.getDestinationAirport().length() != 3) {
-            throw new RuntimeException();
+            throw new InvalidInputException("Values empty or not exactly 3 characters in length i.e. PHL");
         }
 
         if (flight.getSeatCount() < 0) {
-            throw new RuntimeException();
+            throw new InvalidInputException("Seatcount cannot be less than 0");
         }
 
     }
 
-    private void validateFullFlight(Flight flight) {
+    private void validateFullFlight(Flight flight) throws InvalidInputException {
         validateMinFlight(flight);
 
         LocalDateTime currentDate = LocalDateTime.now();
         if (flight.getTimeDeparture().isBefore(currentDate)) {
-            throw new RuntimeException();
+            throw new InvalidInputException("Time of departure must be before the current date");
         }
 
         if (flight.getTimeArrival().isBefore(flight.getTimeDeparture())) {
-            throw new RuntimeException();
+            throw new InvalidInputException("Time arrival is before time of departure");
         }
 
         if (flight.getPilot() < 100000 || flight.getPilot() > 999999) {
-            throw new RuntimeException();
+            throw new InvalidInputException("Pilot IDs are 6 digits long");
         }
 
         if (flight.getAirline() < 1000 || flight.getAirline() > 9999) {
-            throw new RuntimeException();
+            throw new InvalidInputException("Airlines are 4 digits long");
         }
     }
 
