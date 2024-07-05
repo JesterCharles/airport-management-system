@@ -1,18 +1,19 @@
 package Flight;
 
 import java.time.LocalDateTime;
-import java.util.Date; //If you want to see a class you didn't implement ctrl+left-click
 
 public class Flight {
     // Define Attributes: information contained within every instance of this class (object)
-    int flightNumber;
-    String originAirport; // Airport identification number or String
-    String destinationAirport;
-    LocalDateTime timeDeparture;
-    LocalDateTime timeArrival;
-    short seatCount;
-    int pilot;
-    int airline;
+
+    // OOP - Encapsulation - hide information from being easily access & requires the use of getters & setters
+    private int flightNumber;
+    private String originAirport; // Airport identification number or String
+    private String destinationAirport;
+    private LocalDateTime timeDeparture;
+    private LocalDateTime timeArrival;
+    private short seatCount;
+    private int pilot;
+    private int airline;
 
     // Constructors: Initializes(fills in the informaiton for the class attribute or variables) or Instantiates(creation of the object) a class,
     // What if don't define constructors? There is an implicit/default constructor that sets everything to null, NoArgs Constructor
@@ -131,7 +132,4 @@ public class Flight {
         return this.timeDeparture.getMinute() - this.timeArrival.getMinute();
     }
 
-    public long calculateTravelTime(Date timeDeparture, Date timeArrival){
-        return timeDeparture.getTime() - timeArrival.getTime();
-    }
 }

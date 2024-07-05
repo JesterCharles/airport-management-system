@@ -3,11 +3,13 @@ package Flight;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.function.Predicate;
 
 // TODO: Implement the Service Layer, this contains all Business Logic (anything that makes sense in the scope of a business)
 public class FlightService {
     private Flight[] flights = new Flight[5];
-
+    // -> lamba: format () -> {}, defining any parameteres used by the function and it's execution. Parenthesis not necessary for oen parameter
+    private Predicate<String> isNotEmpty = str -> str != null && !str.isBlank();
 
     public Flight[] getFlightInfo(){
         if (isEmpty(flights)) {
@@ -20,12 +22,11 @@ public class FlightService {
     }
 
     public void createFlight(Flight flight){
+        validateMinFlight(flight);
         int indexToReplace = getFirstNull(flights);
         if (indexToReplace == -1) {
             System.out.println("Sorry, our flight database is full, please try again later");
-        } else if(!validateMinFlight(flight)){
-            System.out.println("Invalid information provided.");
-        } else {
+        }  else {
             flights[indexToReplace] = flight;
             System.out.printf("Flight %s successfully added\n", flight);
         }
@@ -33,7 +34,7 @@ public class FlightService {
 
     public Flight findById(int flightNumber){
         for (Flight flight : flights) {
-            if (flight != null && flight.flightNumber == flightNumber) {
+            if (flight != null && flight.getFlightNumber()== flightNumber) {
                 return flight;
             }
         }
@@ -50,7 +51,7 @@ public class FlightService {
         flightToUpdate.setPilot(pilot);
         flightToUpdate.setAirline(airline);
 
-        if(!validateFullFlight(flightToUpdate)) return false;
+        validateFullFlight(flightToUpdate);
 
         return true;
     }
@@ -74,70 +75,54 @@ public class FlightService {
         return -1;
     }
 
-    private boolean validateMinFlight(Flight flight) {
+    private void validateMinFlight(Flight flight) {
         if (flight == null) {
-            return false;
+            throw new RuntimeException();
         }
 
-        if (flight.flightNumber < 1000 || flight.flightNumber > 999999) {
-            System.out.println("Invalid flight number");
-            return false;
+        // potentially bad errors with using public attributes, both reassigning the value & reading with the same expression
+        // we've reassigned the value
+        //flight.flightNumber = 55555;
+        //flight.setFlightNumber(55555);
+        // Now assigned a new variable by 'getting' the flight number using dot (.) syntax
+        //int flightTempNumber = flight.flightNumber;
+        int flightTempNumber = flight.getFlightNumber();
+
+        // alt + shift : multiple cursors
+        if (flight.getFlightNumber() < 1000 || flight.getFlightNumber() > 999999) {
+            throw new RuntimeException();
         }
 
-        if (flight.originAirport.length() != 3 || flight.destinationAirport.length() != 3) {
-            System.out.println("Invalid airport code");
-            return false;
+        if (!isNotEmpty.test(flight.getOriginAirport()) || !isNotEmpty.test(flight.getDestinationAirport())
+                || flight.getOriginAirport().length() != 3 || flight.getDestinationAirport().length() != 3) {
+            throw new RuntimeException();
         }
 
-        if (flight.seatCount < 0) {
-            System.out.println("Invalid seat count");
-            return false;
+        if (flight.getSeatCount() < 0) {
+            throw new RuntimeException();
         }
 
-        return true;
     }
 
-    private static boolean validateFullFlight(Flight flight) {
-        if (flight == null) {
-            return false;
-        }
-        if (flight.flightNumber < 1000 || flight.flightNumber > 999999) {
-            System.out.println("Invalid flight number");
-            return false;
-        }
-
-        if (flight.originAirport.length() != 3 || flight.destinationAirport.length() != 3) {
-            System.out.println("Invalid airport code");
-            return false;
-        }
-
-        if (flight.seatCount < 0) {
-            System.out.println("Invalid seat count");
-            return false;
-        }
+    private void validateFullFlight(Flight flight) {
+        validateMinFlight(flight);
 
         LocalDateTime currentDate = LocalDateTime.now();
-        if (flight.timeDeparture.isBefore(currentDate)) {
-            System.out.println("Invalid departure time");
-            return false;
+        if (flight.getTimeDeparture().isBefore(currentDate)) {
+            throw new RuntimeException();
         }
 
-        if (flight.timeArrival.isBefore(flight.timeDeparture)) {
-            System.out.println("Invalid arrival time");
-            return false;
+        if (flight.getTimeArrival().isBefore(flight.getTimeDeparture())) {
+            throw new RuntimeException();
         }
 
-        if (flight.pilot < 100000 || flight.pilot > 999999) {
-            System.out.println("Invalid pilot ID");
-            return false;
+        if (flight.getPilot() < 100000 || flight.getPilot() > 999999) {
+            throw new RuntimeException();
         }
 
-        if (flight.airline < 1000 || flight.airline > 9999) {
-            System.out.println("Invalid airline ID");
-            return false;
+        if (flight.getAirline() < 1000 || flight.getAirline() > 9999) {
+            throw new RuntimeException();
         }
-
-        return true;
     }
 
 }

@@ -1,13 +1,35 @@
 package Flight;
 
+import util.ScannerValidator;
+
 import java.time.LocalDateTime;
 import java.util.Scanner;
+import java.util.function.Predicate;
 
 public class FlightController {
     // Attributes
 
     public Scanner scanner;
     private final FlightService flightService;
+    ScannerValidator anyInt = (scanner, errorMessage) -> {
+        if (!scanner.hasNextInt()) {
+            System.out.println(errorMessage);
+            scanner.next();
+            return false;
+        }
+        return true;
+    };
+
+    ScannerValidator anyShort = (scanner, errorMessage) -> {
+        if (!scanner.hasNextShort()) {
+            System.out.println(errorMessage);
+            scanner.next();
+            return false;
+        }
+        return true;
+    };
+
+    private Predicate<String> isNotEmpty = str -> str != null && !str.isBlank();
 
     // Constructors - Dependency Injection - any dependent objects are provided at initiliazation
     public FlightController(Scanner scanner, FlightService flightService) {
@@ -31,6 +53,7 @@ public class FlightController {
         Flight flightToAdd;
 
         System.out.println("Please enter flight info, starting with Flight Number: ");
+        if(!anyInt.isValid(scanner, "Invalid data type enter, please enter a number")) return;
         int flightNumber = scanner.nextInt();
 
         System.out.println("Enter origin airport three letter code (Ex. PHL): ");
@@ -41,7 +64,8 @@ public class FlightController {
 
         System.out.println("Enter number of seats: ");
         // Generally, when you cast a value you should only cast smaller to larger
-        short seatCount = (short) scanner.nextInt(); // taking the int and converting it's datatype to short
+        if(!anyShort.isValid(scanner, "Invalid data type enter, please enter a number between 0 & 32,767")) return;
+        short seatCount = scanner.nextShort(); // taking the int and converting it's datatype to short
 
         flightToAdd = new Flight(flightNumber, originAirport, destinationAirport, seatCount);
         flightService.createFlight(flightToAdd);
@@ -62,15 +86,20 @@ public class FlightController {
 
         System.out.println("Enter time of departure date & time formatted as \"2024-07-03 15:48:00\" ");
         String timeDeparture = scanner.nextLine();
+        if(isNotEmpty.test(timeDeparture)){
+            return;
+        }
 
         System.out.println("Enter time of arrival date & time formatted as \"2024-07-03 15:48:00\" ");
         String timeArrival = scanner.nextLine();
 
         System.out.println("Enter pilot ID: ");
+        if(!anyInt.isValid(scanner, "Invalid data type enter, please enter a number")) return;
         int pilot = scanner.nextInt();
         scanner.nextLine();
 
         System.out.println("Enter airline ID: ");
+        if(!anyInt.isValid(scanner, "Invalid data type enter, please enter a number")) return;
         int airline = scanner.nextInt();
         scanner.nextLine();
 
