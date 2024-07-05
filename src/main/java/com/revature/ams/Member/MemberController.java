@@ -1,0 +1,4 @@
+package com.revature.ams.Member;
+
+public class MemberController {
+}
