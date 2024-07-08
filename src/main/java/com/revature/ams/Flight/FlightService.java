@@ -1,6 +1,8 @@
 package com.revature.ams.Flight;
 
+import com.revature.ams.util.exceptions.DataNotFoundException;
 import com.revature.ams.util.exceptions.InvalidInputException;
+import com.revature.ams.util.exceptions.NoSpaceException;
 import com.revature.ams.util.interfaces.Serviceable;
 
 import java.time.LocalDateTime;
@@ -16,10 +18,8 @@ public class FlightService implements Serviceable<Flight> {
     @Override
     public Flight[] findAll(){
         if (isEmpty(flights)) {
-            System.out.println("No flight info");
-            return null;
+            throw new DataNotFoundException("No flight information available");
         } else {
-            System.out.println("Returning flight information....");
             return flights;
         }
     }
@@ -27,14 +27,14 @@ public class FlightService implements Serviceable<Flight> {
     @Override
     public Flight create(Flight flight) throws InvalidInputException {
         validateMinFlight(flight);
+
         int indexToReplace = getFirstNull(flights);
         if (indexToReplace == -1) {
-            System.out.println("Sorry, our flight database is full, please try again later");
+            throw new NoSpaceException("Sorry, our flight database is full, please try again later");
         }  else {
             flights[indexToReplace] = flight;
-            System.out.printf("Flight %s successfully added\n", flight);
+//            System.out.printf("Flight %s successfully added\n", flight); //replace with logger
         }
-        flight.setFlightNumber(1);
         return flight;
     }
 
