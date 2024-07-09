@@ -23,6 +23,10 @@ insert into
 	flights(flight_number, origin_airport, destination_airport, seat_count)
 values (123456,'PHL','BOS',12);
 
+insert into 
+	flights(flight_number, origin_airport, destination_airport, seat_count)
+values (12345,'PHL','BOS',12);
+
 -- READ
 select * from flights;
 
@@ -31,4 +35,15 @@ update flights
 	set destination_airport= 'NYC'
 	where flight_number = 1234;
 
--- DELETE
+select * from flights;
+
+-- DELETE ANYTIME you use a delete make sure you have a WHERE clause
+delete from flights
+	where flight_number = 123456;
+
+select * from flights;
+
+-- specifically want to use TRUNCATE when we want to remove/delete all records in a table
+truncate table flights;
+
+select * from flights;
