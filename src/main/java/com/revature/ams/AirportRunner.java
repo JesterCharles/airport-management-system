@@ -23,7 +23,7 @@ public class AirportRunner {
         FlightController flightController = new FlightController(scanner, flightService); // Instiating a FlightController Object
 
         // TODO: REVIEW ME
-        Member memberLoggedIn = null;
+        Member memberLoggedIn = null; // Storing the Users Session
         MemberService memberService = new MemberService();
         MemberController memberController = new MemberController(scanner, memberService);
 
@@ -39,7 +39,7 @@ public class AirportRunner {
             System.out.println("2. Add Flights");
             System.out.println("3. Update Flight"); // sout - shorthand for System.out.println();
             // TODO: REVIEW ME
-            System.out.println("4. Register");
+            System.out.println("4. Register Member");
             System.out.println("5. Update Member Info");
             System.out.println("6. Login");
             System.out.println("7. Logout");

@@ -5,7 +5,12 @@ import com.revature.ams.Member.MemberService;
 
 import javax.security.sasl.AuthenticationException;
 
-// TODO: REVIEW ME
+/**
+ * Authentication Service to check our member database for matching information based on users input. Separated for
+ * security concerns. REQUIRES MemberService to be injected.
+ *
+ *
+ */
 public class AuthService {
     private final MemberService memberService; // Assuming a MemberService instance
 
