@@ -1,5 +1,6 @@
 package com.revature.ams.Member;
 
+import com.revature.ams.util.exceptions.DataNotFoundException;
 import com.revature.ams.util.interfaces.Serviceable;
 
 import java.util.ArrayList;
@@ -30,6 +31,14 @@ public class MemberService implements Serviceable<Member> {
         return newMember;
     }
 
+    /**
+     * Searches the database for information where the email & password provided must be equal to a row within
+     * our database.
+     *
+     * @param email - String
+     * @param password - String
+     * @return - Member object, if no member found it will return null
+     */
     public Member findByEmailAndPassword(String email, String password){
         for (Member member : memberList) {
             if (member.getEmail().equals(email) && member.getPassword().equals(password)) {
@@ -39,18 +48,29 @@ public class MemberService implements Serviceable<Member> {
         return null;
     }
 
+    /**
+     * Update method takes in a Member Object with the updated information. Searches the list for a matching
+     * memberId. Once found it replaces the object at the index with matching ids with the updated Member.
+     * IF not memberId is matched, we throw an exception.
+     *
+     * @param updatedMember - Is an existing Member with updated information based on their request
+     * @throws DataNotFoundException - MemberId provided doesn't match with anything in the database
+     */
     public void update(Member updatedMember) {
-        int index = -1;
+//        int index = -1;
         for (int i = 0; i < memberList.size(); i++) {
             if (memberList.get(i).getMemberId() == updatedMember.getMemberId()) {
-                index = i;
-                break;
+//                index = i;
+                memberList.set(i, updatedMember);
+                return;
             }
         }
 
-        if (index != -1) {
-            memberList.set(index, updatedMember);
-        }
+        throw new DataNotFoundException("Member with ID provided not within Database");
+
+//        if (index != -1) {
+//            memberList.set(index, updatedMember);
+//        }
     }
 
 }

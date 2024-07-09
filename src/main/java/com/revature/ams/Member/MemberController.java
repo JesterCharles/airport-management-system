@@ -2,6 +2,8 @@ package com.revature.ams.Member;
 
 // TODO: REVIEW ME
 
+import com.revature.ams.util.exceptions.DataNotFoundException;
+
 import java.util.Scanner;
 
 public class MemberController {
@@ -82,8 +84,13 @@ public class MemberController {
                 System.out.println("Invalid choice.");
         }
 
-        memberService.update(memberToUpdate); // Call update method in MemberService
-        System.out.println("Member information updated successfully!");
+        try {
+            memberService.update(memberToUpdate); // Call update method in MemberService
+            System.out.println("Member information updated successfully!");
+        } catch (DataNotFoundException e) {
+            System.out.println(e.getMessage()); // Does this ever change? Will change with logging
+        }
+
     }
 
 }
