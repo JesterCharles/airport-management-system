@@ -3,7 +3,10 @@ package com.revature.ams.Flight;
 import com.revature.ams.util.ScannerValidator;
 import com.revature.ams.util.exceptions.InvalidInputException;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.List;
 import java.util.Scanner;
 import java.util.function.Predicate;
 
@@ -40,11 +43,11 @@ public class FlightController {
 
     // Method
     public void getFlightInfo() {
-        Flight[] flights = flightService.findAll();
+        List<Flight> flights = flightService.findAll();
         if(flights != null){
-            for (int i = 0; i < flights.length; i++) {
-                if (flights[i] != null) { // incase any random nulls in the array, we won't print out null
-                    System.out.println(flights[i].toString());
+            for (int i = 0; i < flights.size(); i++) {
+                if (flights.get(i) != null) { // incase any random nulls in the array, we won't print out null
+                    System.out.println(flights.get(i));
                 }
             }
         }
@@ -83,6 +86,7 @@ public class FlightController {
     // TODO: Implement a method to update flight information by ID
     public void updateFlightInformation(){
         Flight flightToUpdate;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
         System.out.println("Please enter flight to update, starting with Flight Number: ");
         int flightNumber = scanner.nextInt();
@@ -96,25 +100,30 @@ public class FlightController {
 
         System.out.println("Enter time of departure date & time formatted as \"2024-07-03 15:48:00\" ");
         String timeDeparture = scanner.nextLine();
+        flightToUpdate.setTimeDeparture(LocalDateTime.parse(timeDeparture, formatter));
         if(!isNotEmpty.test(timeDeparture)){
             return;
         }
 
         System.out.println("Enter time of arrival date & time formatted as \"2024-07-03 15:48:00\" ");
         String timeArrival = scanner.nextLine();
+        flightToUpdate.setTimeArrival(LocalDateTime.parse(timeArrival, formatter));
 
         System.out.println("Enter pilot ID: ");
         if(!anyInt.isValid(scanner, "Invalid data type enter, please enter a number")) return;
         int pilot = scanner.nextInt();
         scanner.nextLine();
+        flightToUpdate.setPilot(pilot);
 
         System.out.println("Enter airline ID: ");
         if(!anyInt.isValid(scanner, "Invalid data type enter, please enter a number")) return;
         int airline = scanner.nextInt();
         scanner.nextLine();
+        flightToUpdate.setAirline(airline);
 
         try {
-            System.out.printf("Flight update status: ", flightService.update(flightToUpdate, timeArrival, timeDeparture, pilot, airline));
+
+            System.out.printf("Flight update status: ", flightService.update(flightToUpdate));
         } catch (InvalidInputException | DateTimeParseException e) {
             e.printStackTrace();
             System.out.println(e.getMessage());

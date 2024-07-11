@@ -122,6 +122,7 @@ public class Flight {
                 ", timeDeparture=" + timeDeparture +
                 ", timeArrival=" + timeArrival +
                 ", seatCount=" + seatCount +
+                ", pilot=" + pilot +
                 ", airline=" + airline +
                 '}';
     }

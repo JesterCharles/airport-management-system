@@ -7,17 +7,23 @@ import com.revature.ams.util.interfaces.Serviceable;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.function.Predicate;
 
 // TODO: Implement the Service Layer, this contains all Business Logic (anything that makes sense in the scope of a business)
 public class FlightService implements Serviceable<Flight> {
-    private Flight[] flights = new Flight[5];
     // -> lamba: format () -> {}, defining any parameteres used by the function and it's execution. Parenthesis not necessary for oen parameter
     private Predicate<String> isNotEmpty = str -> str != null && !str.isBlank();
+    private FlightRepository flightRepository;
+
+    public FlightService(FlightRepository flightRepository){
+        this.flightRepository = flightRepository;
+    }
 
     @Override
-    public Flight[] findAll(){
-        if (isEmpty(flights)) {
+    public List<Flight> findAll(){
+        List<Flight> flights = flightRepository.findAll();
+        if (flights.isEmpty()) {
             throw new DataNotFoundException("No flight information available");
         } else {
             return flights;
@@ -27,38 +33,17 @@ public class FlightService implements Serviceable<Flight> {
     @Override
     public Flight create(Flight flight) throws InvalidInputException {
         validateMinFlight(flight);
-
-        int indexToReplace = getFirstNull(flights);
-        if (indexToReplace == -1) {
-            throw new NoSpaceException("Sorry, our flight database is full, please try again later");
-        }  else {
-            flights[indexToReplace] = flight;
-//            System.out.printf("Flight %s successfully added\n", flight); //replace with logger
-        }
-        return flight;
+        return flightRepository.create(flight);
     }
 
     @Override
     public Flight findById(int flightNumber){
-        for (Flight flight : flights) {
-            if (flight != null && flight.getFlightNumber()== flightNumber) {
-                return flight;
-            }
-        }
-
-        return null;
+        return flightRepository.findById(flightNumber);
     }
 
-    public boolean update(Flight flightToUpdate, String timeArrival, String timeDeparture, int pilot, int airline) throws InvalidInputException {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
-        flightToUpdate.setTimeArrival(LocalDateTime.parse(timeArrival, formatter));
-        flightToUpdate.setTimeDeparture(LocalDateTime.parse(timeDeparture, formatter));
-        flightToUpdate.setPilot(pilot);
-        flightToUpdate.setAirline(airline);
-
+    // TODO: FIX ME FOR REPO
+    public boolean update(Flight flightToUpdate) throws InvalidInputException {
         validateFullFlight(flightToUpdate);
-
         return true;
     }
 

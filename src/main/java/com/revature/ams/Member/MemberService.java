@@ -11,8 +11,8 @@ public class MemberService implements Serviceable<Member> {
     private List<Member> memberList = new ArrayList<>();
 
     @Override
-    public Member[] findAll() {
-        return new Member[0];
+    public List<Member> findAll() {
+        return null;
     }
 
     @Override

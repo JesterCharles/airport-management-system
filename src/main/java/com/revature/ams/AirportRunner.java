@@ -1,6 +1,7 @@
 package com.revature.ams;
 
 import com.revature.ams.Flight.FlightController;
+import com.revature.ams.Flight.FlightRepository;
 import com.revature.ams.Flight.FlightService;
 import com.revature.ams.Member.Member;
 import com.revature.ams.Member.MemberController;
@@ -19,7 +20,8 @@ public class AirportRunner {
         // Variables that need to be at the top we need to declare earlier
         int choice = 0;
         Scanner scanner = new Scanner(System.in);
-        FlightService flightService = new FlightService();
+        FlightRepository flightRepository = new FlightRepository();
+        FlightService flightService = new FlightService(flightRepository);
         FlightController flightController = new FlightController(scanner, flightService); // Instiating a FlightController Object
 
         // TODO: REVIEW ME
