@@ -1,138 +1,69 @@
 package com.revature.ams.Flight;
 
-import com.revature.ams.util.ScannerValidator;
 import com.revature.ams.util.exceptions.InvalidInputException;
+import com.revature.ams.util.interfaces.Controller;
+import io.javalin.Javalin;
+import io.javalin.http.Context;
+import io.javalin.http.HttpStatus;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.List;
-import java.util.Scanner;
 import java.util.function.Predicate;
 
-public class FlightController {
+public class FlightController implements Controller {
     // Attributes
 
-    public Scanner scanner;
     private final FlightService flightService;
-    ScannerValidator anyInt = (scanner, errorMessage) -> {
-        if (!scanner.hasNextInt()) {
-            System.out.println(errorMessage);
-            scanner.next();
-            return false;
-        }
-        return true;
-    };
-
-    ScannerValidator anyShort = (scanner, errorMessage) -> {
-        if (!scanner.hasNextShort()) {
-            System.out.println(errorMessage);
-            scanner.next();
-            return false;
-        }
-        return true;
-    };
 
     private Predicate<String> isNotEmpty = str -> str != null && !str.isBlank();
 
     // Constructors - Dependency Injection - any dependent objects are provided at initiliazation
-    public FlightController(Scanner scanner, FlightService flightService) {
-        this.scanner = scanner;
+    public FlightController(FlightService flightService) {
         this.flightService = flightService;
     }
 
-    // Method
-    public void getFlightInfo() {
+    // One of the principles of REST is uniform interface, simply means that the PATH in your URL makes sense given the context
+    // of what that path is handling
+
+    @Override
+    public void registerPaths(Javalin app) {
+        app.get("/flights", this::getAllFlights);
+        app.post("/flights", this::postNewFlight);
+        app.get("/flights/{flightNumber}", this::getFlightById); //Path Parameter
+        app.put("flights", this::putUpdateFlight);
+    }
+
+
+    public void getAllFlights(Context ctx){
         List<Flight> flights = flightService.findAll();
-        if(flights != null){
-            for (int i = 0; i < flights.size(); i++) {
-                if (flights.get(i) != null) { // incase any random nulls in the array, we won't print out null
-                    System.out.println(flights.get(i));
-                }
-            }
-        }
+        ctx.json(flights);
     }
 
-    public void addFlight() {
-        Flight flightToAdd;
+    public void postNewFlight(Context ctx){
+        Flight flight = ctx.bodyAsClass(Flight.class); // request body & mapping from JSON to Java Object
 
-        System.out.println("Please enter flight info, starting with Flight Number: ");
-        if(!anyInt.isValid(scanner, "Invalid data type enter, please enter a number")) return;
-        int flightNumber = scanner.nextInt();
-
-        System.out.println("Enter origin airport three letter code (Ex. PHL): ");
-        String originAirport = scanner.next();
-
-        System.out.println("Enter destination airport three letter code (Ex. PHL): ");
-        String destinationAirport = scanner.next();
-
-        System.out.println("Enter number of seats: ");
-        // Generally, when you cast a value you should only cast smaller to larger
-        if(!anyShort.isValid(scanner, "Invalid data type enter, please enter a number between 0 & 32,767")) return;
-        short seatCount = scanner.nextShort(); // taking the int and converting it's datatype to short
-
-        flightToAdd = new Flight(flightNumber, originAirport, destinationAirport, seatCount);
-        try{ // "risky" code execution
-            flightService.create(flightToAdd);
-        }  catch (InvalidInputException e){ // handles any reasonable exceptions
-            e.printStackTrace();
-            System.out.println(e.getMessage()); // TODO: REPLACED WITH A LOGGER
-        } catch(RuntimeException e){
-            e.printStackTrace();
-            System.out.println("You've been caught by a random RuntimeException");
-        }
-
+        ctx.json(flightService.create(flight)); // Respond with the created flight
+        ctx.status(HttpStatus.CREATED); // Responded with a successfull status code
     }
-    // TODO: Implement a method to update flight information by ID
-    public void updateFlightInformation(){
-        Flight flightToUpdate;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-        System.out.println("Please enter flight to update, starting with Flight Number: ");
-        int flightNumber = scanner.nextInt();
-        scanner.nextLine();
+    private void getFlightById(Context ctx) {
+        int flightNumber = Integer.parseInt(ctx.pathParam("flightNumber"));
+        Flight foundFlight = flightService.findById(flightNumber);
 
-        flightToUpdate = flightService.findById(flightNumber);
-        if(flightToUpdate == null) {
-            System.out.println("Flight not found");
-            return;
-        }
+        ctx.json(foundFlight);
+    }
 
-        System.out.println("Enter time of departure date & time formatted as \"2024-07-03 15:48:00\" ");
-        String timeDeparture = scanner.nextLine();
-        flightToUpdate.setTimeDeparture(LocalDateTime.parse(timeDeparture, formatter));
-        if(!isNotEmpty.test(timeDeparture)){
-            return;
-        }
 
-        System.out.println("Enter time of arrival date & time formatted as \"2024-07-03 15:48:00\" ");
-        String timeArrival = scanner.nextLine();
-        flightToUpdate.setTimeArrival(LocalDateTime.parse(timeArrival, formatter));
-
-        System.out.println("Enter pilot ID: ");
-        if(!anyInt.isValid(scanner, "Invalid data type enter, please enter a number")) return;
-        int pilot = scanner.nextInt();
-        scanner.nextLine();
-        flightToUpdate.setPilot(pilot);
-
-        System.out.println("Enter airline ID: ");
-        if(!anyInt.isValid(scanner, "Invalid data type enter, please enter a number")) return;
-        int airline = scanner.nextInt();
-        scanner.nextLine();
-        flightToUpdate.setAirline(airline);
+    private void putUpdateFlight(Context ctx) {
+        Flight updatedFlight = ctx.bodyAsClass(Flight.class);
 
         try {
-
-            System.out.printf("Flight update status: ", flightService.update(flightToUpdate));
-        } catch (InvalidInputException | DateTimeParseException e) {
+            if (flightService.update(updatedFlight)) {
+                ctx.status(HttpStatus.ACCEPTED);
+            } else {
+                ctx.status(HttpStatus.BAD_REQUEST);
+            }
+        } catch (InvalidInputException e){
             e.printStackTrace();
-            System.out.println(e.getMessage());
-        } catch(RuntimeException e){
-            e.printStackTrace();
-            System.out.println("Random Runtime");
         }
     }
-
-
-
 }

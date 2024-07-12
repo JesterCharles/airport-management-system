@@ -1,7 +1,11 @@
 package com.revature.ams.Flight;
 
-import java.time.LocalDateTime;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+@JsonFormat(pattern = "YYYY-MM-DD HH:MM:SS")
 public class Flight {
     // Define Attributes: information contained within every instance of this class (object)
 

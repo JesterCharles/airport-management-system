@@ -13,6 +13,8 @@ public class Member {
         PILOT, ADMIN, PASSENGER
     }
 
+    public Member(){}
+
     public Member(int id, String firstName, String lastName, String email, MemberType type, String password) {
         this.memberId = id;
         this.firstName = firstName;

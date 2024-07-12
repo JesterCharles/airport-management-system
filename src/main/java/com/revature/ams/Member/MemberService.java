@@ -9,6 +9,11 @@ import java.util.List;
 // TODO: REVIEW ME
 public class MemberService implements Serviceable<Member> {
     private List<Member> memberList = new ArrayList<>();
+    private final MemberRepository memberRepository;
+
+    public MemberService(MemberRepository memberRepository){
+        this.memberRepository = memberRepository;
+    }
 
     @Override
     public List<Member> findAll() {
@@ -40,12 +45,7 @@ public class MemberService implements Serviceable<Member> {
      * @return - Member object, if no member found it will return null
      */
     public Member findByEmailAndPassword(String email, String password){
-        for (Member member : memberList) {
-            if (member.getEmail().equals(email) && member.getPassword().equals(password)) {
-                return member;
-            }
-        }
-        return null;
+        return memberRepository.findByEmailAndPassword(email, password);
     }
 
     /**

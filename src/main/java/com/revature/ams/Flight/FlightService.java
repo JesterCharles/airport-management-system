@@ -44,7 +44,7 @@ public class FlightService implements Serviceable<Flight> {
     // TODO: FIX ME FOR REPO
     public boolean update(Flight flightToUpdate) throws InvalidInputException {
         validateFullFlight(flightToUpdate);
-        return true;
+        return flightRepository.update(flightToUpdate);
     }
 
 
