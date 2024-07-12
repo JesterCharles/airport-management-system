@@ -60,8 +60,8 @@ public class Member {
         return type;
     }
 
-    public void setType(MemberType type) {
-        this.type = type;
+    public void setType(String type) {
+        this.type = MemberType.valueOf(type);
     }
 
     public String getPassword() {

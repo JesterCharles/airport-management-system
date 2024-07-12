@@ -56,6 +56,7 @@ public class MemberRepository implements Crudable<Member> {
             member.setFirstName(resultSet.getString("first_name"));
             member.setLastName(resultSet.getString("last_name"));
             member.setEmail(resultSet.getString("email"));
+            member.setType(resultSet.getString("member_type"));
 
             return member;
 

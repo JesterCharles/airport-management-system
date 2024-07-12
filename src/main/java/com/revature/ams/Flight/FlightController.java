@@ -39,6 +39,13 @@ public class FlightController implements Controller {
     }
 
     public void postNewFlight(Context ctx){
+        String memberType = ctx.header("memberType");
+        System.out.println(memberType);
+        if(memberType == null || !memberType.equals("ADMIN")){
+            ctx.status(403);
+            ctx.result("You do not have sufficient permission to perform this action, as you are not logged in as an Admin");
+            return;
+        }
         Flight flight = ctx.bodyAsClass(Flight.class); // request body & mapping from JSON to Java Object
 
         ctx.json(flightService.create(flight)); // Respond with the created flight

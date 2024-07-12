@@ -7,6 +7,8 @@ import com.revature.ams.util.interfaces.Crudable;
 import com.revature.ams.util.interfaces.Serviceable;
 
 import java.sql.*;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDateTime;
@@ -26,13 +28,13 @@ public class FlightRepository implements Crudable<Flight>{
     public boolean update(Flight updatedFlight) {
         try(Connection conn = ConnectionFactory.getConnectionFactory().getConnection()) {
             //"insert into flights(flight_number, origin_airport, destination_airport, seat_count) set (?, ?, ?, ?)";
-            String sql = "UPDATE flights SET departure_time = ?, arrival_time = ?, pilot_id = ?, airline_id = ?, origin_airport = ?, destination_airport = ?, seat_count = ? WHERE flight_number = ?";
+            String sql = "UPDATE flights SET time_departure = ?, time_arrival = ?, pilot = ?, airline = ?, origin_airport = ?, destination_airport = ?, seat_count = ? WHERE flight_number = ?";
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
   
-            LocalDateTime dateTime = updatedFlight.getTimeDeparture();
-            Timestamp departure = Timestamp.valueOf(dateTime);
-            LocalDateTime date = updatedFlight.getTimeArrival();
-            Timestamp arrival = Timestamp.valueOf(date);
+            OffsetDateTime dateTime = updatedFlight.getTimeDeparture();
+            Timestamp departure = Timestamp.valueOf(dateTime.toLocalDateTime());
+            OffsetDateTime date = updatedFlight.getTimeArrival();
+            Timestamp arrival = Timestamp.valueOf(date.toLocalDateTime());
             // DO NOT FORGET SQL is 1-index, not 0-index. They made preparedStatement 1-index
             preparedStatement.setTimestamp(1, departure);
             preparedStatement.setTimestamp(2, arrival);
@@ -167,6 +169,14 @@ public class FlightRepository implements Crudable<Flight>{
         flight.setDestinationAirport(rs.getString("destination_airport"));
         flight.setSeatCount(rs.getShort("seat_count"));
         flight.setPilot(rs.getInt("pilot"));
+
+        Timestamp timeArrival = rs.getObject("time_arrival", Timestamp.class);
+        if(timeArrival != null)
+            flight.setTimeArrival(timeArrival.toLocalDateTime().atOffset(ZoneOffset.UTC));
+
+        Timestamp timeDeparture = rs.getObject("time_departure", Timestamp.class);
+        if(timeDeparture != null)
+            flight.setTimeDeparture(timeDeparture.toLocalDateTime().atOffset(ZoneOffset.UTC));
 
         return flight;
     }

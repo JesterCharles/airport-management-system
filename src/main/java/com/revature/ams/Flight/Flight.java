@@ -3,9 +3,9 @@ package com.revature.ams.Flight;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 
-@JsonFormat(pattern = "YYYY-MM-DD HH:MM:SS")
 public class Flight {
     // Define Attributes: information contained within every instance of this class (object)
 
@@ -13,8 +13,10 @@ public class Flight {
     private int flightNumber;
     private String originAirport; // Airport identification number or String
     private String destinationAirport;
-    private LocalDateTime timeDeparture;
-    private LocalDateTime timeArrival;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+    private OffsetDateTime timeDeparture;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+    private OffsetDateTime timeArrival;
     private short seatCount;
     private int pilot;
     private int airline;
@@ -31,7 +33,7 @@ public class Flight {
     // example: new Flight(1, "PHL", "BOS".....)
     // AllArgs constructor
     public Flight(int flightNumber, String originAirport, String destinationAirport,
-                  LocalDateTime timeDeparture, LocalDateTime timeArrival, short seatCount, int pilot, int airline){
+                  OffsetDateTime timeDeparture, OffsetDateTime timeArrival, short seatCount, int pilot, int airline){
         this.flightNumber = flightNumber;
         this.originAirport = originAirport;
         this.destinationAirport = destinationAirport;
@@ -75,19 +77,19 @@ public class Flight {
         this.destinationAirport = destinationAirport;
     }
 
-    public LocalDateTime getTimeDeparture() {
+    public OffsetDateTime getTimeDeparture() {
         return timeDeparture;
     }
 
-    public void setTimeDeparture(LocalDateTime timeDeparture) {
+    public void setTimeDeparture(OffsetDateTime timeDeparture) {
         this.timeDeparture = timeDeparture;
     }
 
-    public LocalDateTime getTimeArrival() {
+    public OffsetDateTime getTimeArrival() {
         return timeArrival;
     }
 
-    public void setTimeArrival(LocalDateTime timeArrival) {
+    public void setTimeArrival(OffsetDateTime timeArrival) {
         this.timeArrival = timeArrival;
     }
 

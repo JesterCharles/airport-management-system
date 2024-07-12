@@ -7,6 +7,7 @@ import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
 
 import javax.security.sasl.AuthenticationException;
+import java.lang.management.MemoryManagerMXBean;
 import java.util.Scanner;
 
 // TODO: REVIEW ME
@@ -21,6 +22,11 @@ public class AuthController implements Controller {
     @Override
     public void registerPaths(Javalin app) {
         app.post("/login", this::postLogin);
+        app.get("/user-info", this::getRedirect);
+    }
+
+    private void getRedirect(Context ctx){
+        ctx.redirect("https://i.pinimg.com/736x/6a/6d/11/6a6d1124cf69e5588588bc7e397598f6.jpg");
     }
 
     private void postLogin(Context ctx){
@@ -28,7 +34,9 @@ public class AuthController implements Controller {
         String password = ctx.queryParam("password");
 
         try {
-            authService.login(email, password);
+            Member member = authService.login(email, password);
+            ctx.header("memberId", String.valueOf(member.getMemberId()));
+            ctx.header("memberType", member.getType().name());
             ctx.status(200);
         } catch (AuthenticationException e) {
             ctx.status(HttpStatus.UNAUTHORIZED);
