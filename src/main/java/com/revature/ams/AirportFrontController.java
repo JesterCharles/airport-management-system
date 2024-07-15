@@ -13,11 +13,16 @@ import com.revature.ams.util.auth.AuthController;
 import com.revature.ams.util.auth.AuthService;
 import io.javalin.Javalin;
 import io.javalin.json.JavalinJackson;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 // FrontController Example
 public class AirportFrontController {
+
+    public static final Logger logger = LoggerFactory.getLogger(AirportFrontController.class);
+
     public static void main(String[] args) {
-        System.out.println("Airport Management System is up and running.....");
+        logger.info("Airport Management System is up and running.....");
 
         Javalin app = Javalin.create(config -> {
             config.jsonMapper(new JavalinJackson());

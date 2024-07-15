@@ -6,30 +6,42 @@ import com.revature.ams.util.exceptions.NoSpaceException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+
+import java.time.OffsetDateTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 public class FlightServiceTestSuite {
 
+    //@Mock // indicates the object needing to be mocked
+    private FlightRepository mockFlightRepository;
+
+    //@InjectMocks // inject our FlightRepostory into our FlightService as a mocked objected
     private FlightService sut;
 
     @BeforeEach
     public void setUp(){
-        sut = new FlightService();
+        mockFlightRepository = mock(FlightRepository.class);
+        sut = new FlightService(mockFlightRepository);
     }
 
     @Test
     public void testCreate_ValidMinData() throws InvalidInputException {
         // AAA
         // Arrange - what do you need? Any objects created for testing purposes?
-        Flight validFlight = new Flight(123456, "PHL", "BOS", (short) 123);
+        Flight validFlight = new Flight(999998, "PHL", "BOS", (short) 123);
+        when(mockFlightRepository.create(validFlight)).thenReturn(validFlight);
 
         // Action - the method invocation
         Flight returnedFlight = sut.create(validFlight);
-        sut.validateMinFlight(validFlight);
 
         // Assert - making sure the action returns as excepted
         assertEquals(validFlight, returnedFlight);
+        verify(mockFlightRepository, times(1)).create(validFlight);
 
     }
 
@@ -48,43 +60,6 @@ public class FlightServiceTestSuite {
         assertThrows(InvalidInputException.class, ()->{
             sut.create(invalidFlight);
         });
-    }
-
-    @Test
-    public void testFindAll_EmptyArray() {
-        // No arrange needed as flights array is empty by default
-
-        Assertions.assertThrows(DataNotFoundException.class, () -> sut.findAll());
-    }
-
-    @Test
-    public void testFindAll_NotEmptyArray() throws InvalidInputException {
-
-        Flight validFlight = new Flight(123456, "PHL", "BOS", (short) 123);
-
-        sut.create(validFlight);
-        Flight[] retrievedFlights = sut.findAll();
-
-        Assertions.assertEquals(5, retrievedFlights.length);
-        Assertions.assertEquals(validFlight, retrievedFlights[0]);
-    }
-
-
-    @Test
-    public void testCreate_FullArray() throws Exception {
-
-        Flight validFlight = new Flight(123456, "PHL", "BOS", (short) 123);
-        int validFlightNumber = 123457;
-        short validSeatCount = 124;
-        // Fill the flight array with dummy flights
-        for (int i = 0; i < 5; i++) {
-
-            sut.create( new Flight(validFlightNumber, "PHL", "BOS", validSeatCount));
-            validFlightNumber++;
-            validSeatCount++;
-        }
-
-        Assertions.assertThrows(NoSpaceException.class, () -> sut.create(validFlight));
     }
 
     @Test
@@ -118,5 +93,29 @@ public class FlightServiceTestSuite {
         Flight invalidAirportLength = new Flight(56789, "LAX", "JK", (short) 123);
 
         Assertions.assertThrows(InvalidInputException.class, () -> sut.create(invalidAirportLength));
+    }
+
+    @Test
+    public void testUpdate_ValidFlight(){
+        // AAA
+        Flight validFlight = new Flight(123456, "PHL", "BOS", OffsetDateTime.now().plusHours(2),
+                OffsetDateTime.now().plusDays(1), (short) 123, 123456, 1234);
+        when(mockFlightRepository.update(validFlight)).thenReturn(true);
+
+        boolean returnedUpdate = sut.update(validFlight);
+        assertTrue(returnedUpdate);
+        verify(mockFlightRepository, times(1)).update(validFlight);
+    }
+
+    @Test
+    public void testDelete_validFlightNumber(){
+        Flight validFlight = new Flight(123456, "PHL", "BOS", OffsetDateTime.now().plusHours(2),
+                OffsetDateTime.now().plusDays(1), (short) 123, 123456, 1234);
+        when(mockFlightRepository.delete(validFlight)).thenReturn(true);
+
+        boolean actual = sut.delete(validFlight);
+
+        assertTrue(actual);
+        verify(mockFlightRepository, times(1)).delete(validFlight);
     }
 }
