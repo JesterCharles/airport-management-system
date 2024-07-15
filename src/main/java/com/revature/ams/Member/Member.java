@@ -13,6 +13,8 @@ public class Member {
         PILOT, ADMIN, PASSENGER
     }
 
+    public Member(){}
+
     public Member(int id, String firstName, String lastName, String email, MemberType type, String password) {
         this.memberId = id;
         this.firstName = firstName;
@@ -58,8 +60,8 @@ public class Member {
         return type;
     }
 
-    public void setType(MemberType type) {
-        this.type = type;
+    public void setType(String type) {
+        this.type = MemberType.valueOf(type);
     }
 
     public String getPassword() {

@@ -17,6 +17,7 @@
 
 -- shortcut: ctrl+enter will run a single SQL statement
 -- drops
+drop table members;
 drop table flights;
 
 -- CREATE - Keywords: create, insert, alter
@@ -24,32 +25,14 @@ create table flights(
 	flight_number integer primary key check (flight_number > 1000 and flight_number < 999999),
 	origin_airport varchar(3) not null, -- foreign keys, use alter
 	destination_airport varchar(3) not null,
-	time_departure date,
-	time_arrival date,
+	time_departure timestamp,
+	time_arrival timestamp,
 	seat_count smallint not null check (seat_count > 0),
 	pilot integer check (pilot > 100000 and pilot < 999999),
 	airline integer
-); 
-
-
-insert into 
-	flights(flight_number, origin_airport, destination_airport, seat_count)
-values (1234,'PHL','BOS',12);
-
-insert into 
-	flights(flight_number, origin_airport, destination_airport, seat_count)
-values (123456,'PHL','BOS',12);
-
-insert into 
-	flights(flight_number, origin_airport, destination_airport, seat_count)
-values (12345,'PHL','BOS',12);
-
--- READ
-select * from flights;
-
+);
 
 create type member_enum as enum ('ADMIN', 'PILOT', 'PASSENGER');
--- New Table
 create table members(
 	member_id serial primary key, -- auto-incrementing number, also IDENTITY(1,10)
 	first_name varchar(20),
@@ -82,19 +65,21 @@ values (123456, 'miguel', 'helguero', 'miguel@mail.com', 'PILOT', 'superPass123'
 
 --delete from members where email = 'miguel@mail.com'; -- ctrl + / shortcut comment
 
-select * from flights;
-
 -- nested query or sub-query
 update flights
 set pilot = (
 	select member_id from members
-	where email = 'migeul@mail.com'
+	where email = 'miguel@mail.com'
 	and member_type = 'PILOT'
 ) where flight_number IN ( -- specifying a list, it will check it value
 	select flight_number from flights
-		where cast(flight_number as VARCHAR(6)) like '1234%' -- wildcard will select anything after
+		where cast(flight_number as VARCHAR(6)) like '%34%' -- wildcard will select anything after
 		and seat_count > 200
 );
+
+select member_id from members
+	where email = 'miguel@mail.com'
+	and member_type = 'PILOT';
 
 select flight_number from flights
 where cast(flight_number as VARCHAR(6)) like '1234%' -- wildcard will select anything after

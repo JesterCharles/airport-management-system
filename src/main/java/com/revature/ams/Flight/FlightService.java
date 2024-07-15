@@ -6,6 +6,7 @@ import com.revature.ams.util.exceptions.NoSpaceException;
 import com.revature.ams.util.interfaces.Serviceable;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.function.Predicate;
@@ -44,7 +45,7 @@ public class FlightService implements Serviceable<Flight> {
     // TODO: FIX ME FOR REPO
     public boolean update(Flight flightToUpdate) throws InvalidInputException {
         validateFullFlight(flightToUpdate);
-        return true;
+        return flightRepository.update(flightToUpdate);
     }
 
 
@@ -99,7 +100,7 @@ public class FlightService implements Serviceable<Flight> {
     public void validateFullFlight(Flight flight) throws InvalidInputException {
         validateMinFlight(flight);
 
-        LocalDateTime currentDate = LocalDateTime.now();
+        OffsetDateTime currentDate = OffsetDateTime.now();
         if (flight.getTimeDeparture().isBefore(currentDate)) {
             throw new InvalidInputException("Time of departure must be before the current date");
         }
