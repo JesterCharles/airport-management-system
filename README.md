@@ -4,6 +4,13 @@
 
 This is a simple Airport Management System for an airport utilizing Java.
 
+## AMS ERD
+![](src/main/resources/ams-erd.png)
+
+## AMS API Architecture
+
+![](src/main/resources/ams-app-architecture.png)
+
 ## User Stories
 ### Format: AS A...I WANT TO...SO THAT...
 
@@ -19,4 +26,5 @@ This is a simple Airport Management System for an airport utilizing Java.
       1. so that Passengers can see accurate flight information
    2. I want to add, update or delete airlines
       1. so that Airlines are associated with our flights
+
 
