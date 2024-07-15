@@ -11,6 +11,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.function.Predicate;
 
+import static com.revature.ams.AirportFrontController.logger;
+
 // TODO: Implement the Service Layer, this contains all Business Logic (anything that makes sense in the scope of a business)
 public class FlightService implements Serviceable<Flight> {
     // -> lamba: format () -> {}, defining any parameteres used by the function and it's execution. Parenthesis not necessary for oen parameter
@@ -38,8 +40,11 @@ public class FlightService implements Serviceable<Flight> {
     }
 
     @Override
-    public Flight findById(int flightNumber){
-        return flightRepository.findById(flightNumber);
+    public Flight findById(int flightNumber) throws DataNotFoundException{
+        logger.info("Flight number was sent to service as {}", flightNumber);
+        Flight foundFlight = flightRepository.findById(flightNumber);
+        logger.info("The flight was found and is {}", foundFlight);
+        return foundFlight;
     }
 
     // TODO: FIX ME FOR REPO
@@ -48,6 +53,15 @@ public class FlightService implements Serviceable<Flight> {
         return flightRepository.update(flightToUpdate);
     }
 
+//    public boolean delete(Flight flight){
+//        validateFullFlight(flight);
+//        return flightRepository.delete(flight);
+//    }
+
+    public boolean delete(Flight flight){
+        validateFullFlight(flight);
+        return flightRepository.delete(flight);
+    }
 
     public boolean isEmpty(Flight[] arr) { // defining the parameter of a string array to be included when executing this mehtod
         for (Flight element : arr) { // enhanced for each loop, that iterates through the arrays elements returning & assigning the value to the declared variable flight
