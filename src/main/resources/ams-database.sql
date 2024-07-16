@@ -73,8 +73,7 @@ set pilot = (
 	and member_type = 'PILOT'
 ) where flight_number IN ( -- specifying a list, it will check it value
 	select flight_number from flights
-		where cast(flight_number as VARCHAR(6)) like '%34%' -- wildcard will select anything after
-		and seat_count > 200
+		where seat_count > 200
 );
 
 select member_id from members
@@ -111,11 +110,11 @@ values (12345,'PHL','BOS',191);
 -- multi-insert
 insert into
 	flights(flight_number, origin_airport, destination_airport, seat_count)
-values (12346,'NYC','PHL',13),
-	   (12347,'PHL','NYC',123),
-	   (12348,'BOS','NYC',288),
-	   (12349,'ATL','BOS',44),
-	   (12340,'PHL','ATL',800)
+values (32346,'NYC','PHL',13),
+	   (32347,'PHL','NYC',12),
+	   (32348,'BOS','NYC',28),
+	   (32349,'ATL','BOS',44),
+	   (32340,'PHL','ATL',80)
 ;
 
 insert into
@@ -195,3 +194,149 @@ select * from flights;
 -- truncate table flights;
 -- select * from flights;
 
+-- JOINS & aliases tables
+select  f.*, m.member_id, m.first_name, m.last_name 
+from flights f
+inner join members m on f.pilot = m.member_id
+where m.member_id = 123456;
+
+-- Aggregate Functions & Aliases (columns)
+select origin_airport, count(*) as flight_count
+from flights
+group by origin_airport 
+order by flight_count DESC;
+
+-- Top 2 destinations
+select destination_airport, count(*) as flight_count
+from flights
+group by destination_airport 
+order by flight_count desc
+limit 2;
+
+-- 3rd highest ranking destination
+select destination_airport, count(*) as flight_count
+from flights
+group by destination_airport 
+order by flight_count desc
+offset 2
+limit 1;
+
+select count(*) as total_flights from flights;
+
+-- scalar functions apply to every single value in a result set
+select *, substring(first_name, 1, 3) as first_name from members;
+
+select member_id, length(first_name) as length_fname
+from members 
+order by length_fname desc;
+
+select *, now() 
+from members;
+
+select time_arrival
+from flights f 
+where time_arrival notnull
+and time_arrival > current_timestamp;
+
+select *
+from flights f 
+where time_departure > current_timestamp;
+
+UPDATE flights
+SET time_departure = current_timestamp + interval '20 day'
+where time_departure is null;
+
+UPDATE flights
+SET time_arrival = current_timestamp + interval '20 day' + interval '6 hour'
+where time_arrival is null;
+
+select * from flights;
+
+-- Advanced SQL Topics
+create view active_flights as
+select *
+from flights f 
+where time_departure > current_timestamp;
+
+create view inactive_flights as
+select *
+from flights f 
+where time_departure < current_timestamp;
+
+-- create or replace will overwrite if the view already exist
+create or replace view active_flights as
+select f.*, email, last_name
+from flights f 
+inner join members m on m.member_id = f.pilot
+where time_departure > current_timestamp;
+
+select * from active_flights;
+select * from inactive_flights;
+
+-- Functions - they always return some value, new.column_name indicates the new record being added
+create or replace function generate_pilot_id2()
+	returns trigger
+	language plpgsql
+	as $$
+declare 
+	new_id integer; -- variable
+begin 
+	select random()*1000000 into new_id;
+	if new.member_type = 'PILOT' then 
+		new.member_id := new_id; -- := is reassignment, because = is value evaluator
+	end if;
+	return new;
+end; $$
+
+-- Trigger
+create or replace trigger assign_pilot_id 
+before insert -- occurs before every insert into the members tables
+on members
+for each row -- will apply to multiple rows, other option would be statement
+execute function generate_pilot_id2(); -- executes our above function
+
+insert into members(first_name, last_name, email, member_type, "password")
+values 
+('david', 'jeske', 'david2@mail.com', 'PILOT', 'superPass123'),
+('asaf', 'ahmed', 'asaf2@mail.com', 'PILOT', 'superPass123'),
+('callie', 'williams', 'callie2@mail.com', 'PILOT', 'superPass123'),
+('karlas', 'gonzalez', 'karla2@mail.com', 'PILOT', 'superPass123')
+;
+
+select * from members;
+select * from flights;
+-- Procedure helps replace & automate some of the more verbose commands
+create or replace procedure update_flight(
+	in p_flight_number int,
+	in p_origin_airport VARCHAR(3),
+	in p_destination_airport VARCHAR(3),
+	in p_time_departure timestamp,
+	in p_time_arrival timestamp,
+	in p_seat_count smallint,
+	in p_pilot int,
+	in p_airline int
+)
+language plpgsql
+as $$
+begin 
+	update flights 
+	set origin_airport = p_origin_airport, 
+		destination_airport = p_destination_airport,
+		time_departure = p_time_departure,
+		time_arrival = p_time_arrival,
+		seat_count = p_seat_count,
+		pilot = p_pilot,
+		airline = p_airline
+	where flight_number = p_flight_number;
+end;
+$$;
+
+select * from flights;
+call update_flight(777778, 
+'HOU',
+'PHL', 
+(current_timestamp + interval '1 day'), 
+(current_timestamp + interval '2 day'), 
+145, 
+123456, 
+4567);
