@@ -37,6 +37,7 @@ public class AirportFrontController {
         MemberRepository memberRepository = new MemberRepository();
         MemberService memberService = new MemberService(memberRepository);
         MemberController memberController = new MemberController(memberService);
+        memberController.registerPaths(app);
 
         AuthService authService = new AuthService(memberService);
         AuthController authController = new AuthController(authService);

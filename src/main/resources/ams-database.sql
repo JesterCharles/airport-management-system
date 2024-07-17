@@ -55,8 +55,8 @@ references members(member_id);
 insert into members
 values (default, 'tommy', 'hoang', 'tommy@mail.com', default, 'superPass123');
 
-insert into members(first_name, last_name, email, password)
-values ('ruben', 'fitch', 'ruben@mail.com','superPass123!');
+insert into members(first_name, last_name, email, member_type, password)
+values ('ruben', 'fitch', 'ruben@mail.com','PILOT', 'superPass123!');
 
 -- In steps database admin, adding a pilot & an admin
 
@@ -64,6 +64,10 @@ insert into members
 values (123456, 'miguel', 'helguero', 'miguel@mail.com', 'PILOT', 'superPass123');
 
 --delete from members where email = 'miguel@mail.com'; -- ctrl + / shortcut comment
+select * from members;
+update members
+set first_name = 'BLARGH', last_name = 'HGRALB', email = 'blargh@mail.com', password = 'blargh!'
+where member_id = 43; 
 
 -- nested query or sub-query
 update flights
@@ -75,7 +79,8 @@ set pilot = (
 	select flight_number from flights
 		where seat_count > 200
 );
-
+delete from members 
+where email = 'tester@mail.com';
 select member_id from members
 	where email = 'miguel@mail.com'
 	and member_type = 'PILOT';
@@ -314,11 +319,14 @@ create or replace procedure update_flight(
 	in p_time_arrival timestamp,
 	in p_seat_count smallint,
 	in p_pilot int,
-	in p_airline int
+	in p_airline int,
+	inout updated_rows int
 )
 language plpgsql
 as $$
-begin 
+declare
+	_row_count int = 0;
+begin
 	update flights 
 	set origin_airport = p_origin_airport, 
 		destination_airport = p_destination_airport,
@@ -327,16 +335,22 @@ begin
 		seat_count = p_seat_count,
 		pilot = p_pilot,
 		airline = p_airline
-	where flight_number = p_flight_number;
+	where flight_number = p_flight_number;	
+	get diagnostics updated_rows := row_count;
+
 end;
 $$;
 
-select * from flights;
-call update_flight(777778, 
+select * from flights where flight_number = 777778;
+call update_flight(77778, 
 'HOU',
 'PHL', 
-(current_timestamp + interval '1 day'), 
-(current_timestamp + interval '2 day'), 
-145, 
+(current_timestamp + interval '1 day')::timestamp, 
+(current_timestamp + interval '2 day')::timestamp, 
+145::smallint, 
 123456, 
-4567);
+4567,
+0);
+
+
+

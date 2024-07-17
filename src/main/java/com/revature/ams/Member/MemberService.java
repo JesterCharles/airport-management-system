@@ -3,12 +3,10 @@ package com.revature.ams.Member;
 import com.revature.ams.util.exceptions.DataNotFoundException;
 import com.revature.ams.util.interfaces.Serviceable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 // TODO: REVIEW ME
 public class MemberService implements Serviceable<Member> {
-    private List<Member> memberList = new ArrayList<>();
     private final MemberRepository memberRepository;
 
     public MemberService(MemberRepository memberRepository){
@@ -22,18 +20,16 @@ public class MemberService implements Serviceable<Member> {
 
     @Override
     public Member findById(int memberId) {
-        for (Member member : memberList) {
-            if (member.getMemberId() == memberId) {
-                return member;
-            }
-        }
-        return null;
+        return memberRepository.findById(memberId);
     }
 
     @Override
     public Member create(Member newMember) {
-        memberList.add(newMember);
-        return newMember;
+        return memberRepository.create(newMember);
+    }
+
+    public boolean delete(Member removedMemeber) {
+        return memberRepository.delete(removedMemeber);
     }
 
     /**
@@ -56,21 +52,8 @@ public class MemberService implements Serviceable<Member> {
      * @param updatedMember - Is an existing Member with updated information based on their request
      * @throws DataNotFoundException - MemberId provided doesn't match with anything in the database
      */
-    public void update(Member updatedMember) {
-//        int index = -1;
-        for (int i = 0; i < memberList.size(); i++) {
-            if (memberList.get(i).getMemberId() == updatedMember.getMemberId()) {
-//                index = i;
-                memberList.set(i, updatedMember);
-                return;
-            }
-        }
-
-        throw new DataNotFoundException("Member with ID provided not within Database");
-
-//        if (index != -1) {
-//            memberList.set(index, updatedMember);
-//        }
+    public boolean update(Member updatedMember) {
+        return memberRepository.update(updatedMember);
     }
 
 }
