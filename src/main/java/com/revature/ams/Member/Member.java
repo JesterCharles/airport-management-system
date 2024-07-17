@@ -1,5 +1,7 @@
 package com.revature.ams.Member;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 // TODO: REVIEW ME
 public class Member {
     private int memberId;
@@ -7,6 +9,7 @@ public class Member {
     private String lastName;
     private String email;
     private MemberType type;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     public enum MemberType {
