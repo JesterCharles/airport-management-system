@@ -11,8 +11,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * TODO: DOCUMENT ME
+ */
 public class BookingRepository {
 
+    /**
+     * TODO: DOCUMENT ME
+     *
+     * @param newBooking
+     * @return
+     */
     public Optional<Booking> create(Booking newBooking) {
         try (Connection conn = ConnectionFactory.getConnectionFactory().getConnection()) {
             String sql = "insert into bookings(flight_number, member_id, carry_on_allowed, checked_luggage, seat_type, price) values (?,?,?,?,?,?)";
@@ -41,7 +50,10 @@ public class BookingRepository {
         }
     }
 
-
+    /**
+     * TODO: DOCUMENT ME
+     * @return
+     */
     public List<Booking> findAll() {
         try (Connection conn = ConnectionFactory.getConnectionFactory().getConnection()) {
             List<Booking> bookings = new ArrayList<>();
@@ -78,7 +90,11 @@ public class BookingRepository {
         }
     }
 
-
+    /**
+     * TODO: DOCUMENT ME
+     * @param memberId
+     * @return
+     */
     public List<Booking> findAllBookingsByMemberId(int memberId) {
         try (Connection conn = ConnectionFactory.getConnectionFactory().getConnection()) {
 
@@ -113,6 +129,12 @@ public class BookingRepository {
         }
     }
 
+    /**
+     * TODO: DOCUMENT ME
+     * @param rs
+     * @return
+     * @throws SQLException
+     */
     private Flight generateFlightFromResultSet(ResultSet rs) throws SQLException {
         Flight flight = new Flight();
 

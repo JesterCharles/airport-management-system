@@ -32,6 +32,11 @@ public class Booking {
         this.price = price;
     }
 
+    /**
+     * TODO: DOCUMENT ME
+     *
+     * @param bookingRequestDTO
+     */
     public Booking(BookingRequestDTO bookingRequestDTO){
         Flight flight = new Flight();
         flight.setFlightNumber(bookingRequestDTO.getFlightNumber());

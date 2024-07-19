@@ -8,6 +8,9 @@ import com.revature.ams.util.interfaces.Controller;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
+/**
+ * TODO: DOCUMENT ME
+ */
 public class BookingController implements Controller {
     private final BookingService bookingService;
     private final MemberService memberService;
@@ -19,6 +22,11 @@ public class BookingController implements Controller {
         this.flightService = flightService;
     }
 
+    /**
+     * TODO: DOCUMENT ME
+     *
+     * @param app
+     */
     @Override
     public void registerPaths(Javalin app) {
         app.post("/bookings", this::postBookFlight);
@@ -27,6 +35,10 @@ public class BookingController implements Controller {
         app.delete("/bookings/{booking_id}", this::deleteBooking);
     }
 
+    /**
+     * TODO: DOCUMENT ME
+     * @param ctx
+     */
     private void postBookFlight(Context ctx) {
         BookingRequestDTO bookingRequestDTO = ctx.bodyAsClass(BookingRequestDTO.class);
         Booking newBooking = new Booking(bookingRequestDTO);
@@ -39,6 +51,10 @@ public class BookingController implements Controller {
         ctx.json(bookingResponseDTO);
     }
 
+    /**
+     * TODO: DOCUMENT ME
+     * @param ctx
+     */
     private void findAllBookings(Context ctx){
         String memberType = ctx.header("memberType");
         if(memberType == null || !memberType.equals("ADMIN")) {
@@ -50,6 +66,10 @@ public class BookingController implements Controller {
         ctx.json(bookingService.findAll());
     }
 
+    /**
+     * TODO: DOCUMENT ME
+     * @param ctx
+     */
     private void getMembersBookings(Context ctx) {
         int memberId = loggedInCheck(ctx);
         if (memberId == -1) return;
@@ -62,6 +82,11 @@ public class BookingController implements Controller {
 
     }
 
+    /**
+     * TODO: DOCUMENT ME
+     * @param ctx
+     * @return
+     */
     private int loggedInCheck(Context ctx) {
         String headerMemberId = ctx.header("memberId");
         if (headerMemberId == null) {

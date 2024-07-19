@@ -1,11 +1,8 @@
 package com.revature.ams.Booking.dtos;
 
-import com.revature.ams.Booking.Booking;
-import com.revature.ams.Flight.Flight;
-import com.revature.ams.Member.Member;
-
-import java.math.BigDecimal;
-
+/**
+ * TODO: DOCUMENT ME
+ */
 public class BookingRequestDTO {
     private int flightNumber;
     private int memberId;

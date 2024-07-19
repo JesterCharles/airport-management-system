@@ -3,13 +3,14 @@ package com.revature.ams.Booking;
 import com.revature.ams.Booking.dtos.BookingResponseDTO;
 import com.revature.ams.util.exceptions.InvalidInputException;
 
-import java.awt.print.Book;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * TODO: DOCUMENT ME
+ */
 public class BookingService {
     private final BookingRepository bookingRepository;
 
@@ -17,6 +18,12 @@ public class BookingService {
         this.bookingRepository = bookingRepository;
     }
 
+    /**
+     * TODO: DOCUMENT ME
+     *
+     * @param newBooking
+     * @return
+     */
     public BookingResponseDTO bookFlight(Booking newBooking) {
         newBooking.setPrice(calculateTotalPrice(newBooking));
         if(newBooking.getSeatType().name().equals("BUSINESS") || newBooking.getSeatType().name().equals("FIRSTCLASS")){
@@ -24,15 +31,24 @@ public class BookingService {
         }
 
         Optional<Booking> booking = bookingRepository.create(newBooking);
-        if(booking.isEmpty()) throw new InvalidInputException("Double check flight exists");
+        booking.orElseThrow(() -> new InvalidInputException("Double-Check "));
 
         return booking.map(BookingResponseDTO::new).get();
     }
 
+    /**
+     * TODO: DOCUMENT ME
+     * @return
+     */
     public List<Booking> findAll() {
         return bookingRepository.findAll();
     }
 
+    /**
+     * TODO: DOCUMENT ME
+     * @param memberId
+     * @return
+     */
     public List<BookingResponseDTO> findAllBookingsByMemberId(int memberId){
        return bookingRepository.findAllBookingsByMemberId(memberId)
                .stream()
@@ -40,12 +56,22 @@ public class BookingService {
                .toList();
     }
 
+    /**
+     * TODO: DOCUMENT ME
+     * @param booking
+     * @return
+     */
     public BigDecimal calculateTotalPrice(Booking booking) {
         BigDecimal seatPrice = calculateSeatPrice(booking.getSeatType());
         BigDecimal luggagePrice = calculateLuggagePrice(booking.getCheckedLuggage());
         return new BigDecimal("299.99").add(seatPrice).add(luggagePrice);
     }
 
+    /**
+     * TODO: DOCUMENT ME
+     * @param seatType
+     * @return
+     */
     private BigDecimal calculateSeatPrice(Booking.SeatType seatType) {
         return switch (seatType) {
             case SEATSOPTIONAL -> new BigDecimal("50.00");
@@ -56,6 +82,11 @@ public class BookingService {
         };
     }
 
+    /**
+     * TODO: DOCUMENT ME
+     * @param checkedLuggage
+     * @return
+     */
     private BigDecimal calculateLuggagePrice(short checkedLuggage) {
         if (checkedLuggage < 0) {
             throw new IllegalArgumentException("Number of checked luggage cannot be negative");

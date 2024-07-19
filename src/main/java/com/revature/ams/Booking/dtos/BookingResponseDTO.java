@@ -2,10 +2,13 @@ package com.revature.ams.Booking.dtos;
 
 import com.revature.ams.Booking.Booking;
 import com.revature.ams.Flight.Flight;
-import com.revature.ams.Member.Member;
 
 import java.math.BigDecimal;
 
+
+/**
+ * TODO: DOCUMENT ME
+ */
 public class BookingResponseDTO {
     private int bookingId;
     private Flight flight;
@@ -26,6 +29,11 @@ public class BookingResponseDTO {
         this.price = price;
     }
 
+    /**
+     * TODO: DOCUMENT ME
+     *
+     * @param booking
+     */
     public BookingResponseDTO(Booking booking){
         this.flight = booking.getFlight();
         this.bookingId = booking.getBookingId();
