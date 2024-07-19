@@ -60,10 +60,10 @@ public class BookingService {
      * @return  A list of BookingResponseDTO objects representing the flights booked by the specified member
      */
     public List<BookingResponseDTO> findAllBookingsByMemberId(int memberId){
-       return bookingRepository.findAllBookingsByMemberId(memberId)
-               .stream()
-               .map(BookingResponseDTO::new)
-               .toList();
+        return bookingRepository.findAllBookingsByMemberId(memberId)
+                .stream()
+                .map(BookingResponseDTO::new)
+                .toList();
     }
 
     /**
@@ -198,8 +198,8 @@ import java.util.Optional;
 
     /**
      * A helper method that calculates luggage price given the number of checked luggage minus a discount
-     * @param checkedLuggage
-     * @return
+     * @param checkedLuggage The amount of checked luggage used to calculate luggage price
+     * @return The price of checked luggage minus a discount
      */
     private BigDecimal calculateLuggagePrice(short checkedLuggage) {
         if (checkedLuggage < 0) {
