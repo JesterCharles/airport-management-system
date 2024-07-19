@@ -17,10 +17,10 @@ import java.util.Optional;
 public class BookingRepository {
 
     /**
-     * TODO: DOCUMENT ME
+     * Inserts a provided Booking object into a SQL database
      *
-     * @param newBooking
-     * @return
+     * @param newBooking the information required to create a new Booking, posted from BookingService
+     * @return a newly created Booking or, in the case of failure, an empty Optional
      */
     public Optional<Booking> create(Booking newBooking) {
         try (Connection conn = ConnectionFactory.getConnectionFactory().getConnection()) {
@@ -51,8 +51,11 @@ public class BookingRepository {
     }
 
     /**
-     * TODO: DOCUMENT ME
-     * @return
+     * Queries a SQL database for a list of all flight bookings
+     *
+     *
+     * @return A List of all member IDs that created a booking, the booking related to them, and the flight number
+     * the booking was created for
      */
     public List<Booking> findAll() {
         try (Connection conn = ConnectionFactory.getConnectionFactory().getConnection()) {
@@ -91,9 +94,11 @@ public class BookingRepository {
     }
 
     /**
-     * TODO: DOCUMENT ME
-     * @param memberId
-     * @return
+     * Queries a SQL database for all flights booked by a member with provided
+     * member ID. Returns the booking and flight object(s) related to the membe ID
+     *
+     * @param memberId the id of the target member
+     * @return a list of all flights in the form of a List of Flight objects
      */
     public List<Booking> findAllBookingsByMemberId(int memberId) {
         try (Connection conn = ConnectionFactory.getConnectionFactory().getConnection()) {
@@ -130,10 +135,12 @@ public class BookingRepository {
     }
 
     /**
-     * TODO: DOCUMENT ME
-     * @param rs
-     * @return
-     * @throws SQLException
+     * Generates a Java flight object from the provided SQL result set.
+     * Returns the Java flight object for use in BookingRepository functions.
+     *
+     * @param rs the provided result set from which to create the Flight object
+     * @return A Flight object created from the given result set
+     * @throws SQLException an exception thrown if the result set is empty or otherwise faulty
      */
     private Flight generateFlightFromResultSet(ResultSet rs) throws SQLException {
         Flight flight = new Flight();
