@@ -57,7 +57,7 @@ public class BookingService {
     }
 
     /**
-     * TODO: DOCUMENT ME
+     * Calculates total price of a ticket given seat price and luggage price
      * @param booking
      * @return
      */
@@ -68,7 +68,7 @@ public class BookingService {
     }
 
     /**
-     * TODO: DOCUMENT ME
+     * A helper method that returns the price of a given seat type
      * @param seatType
      * @return
      */
@@ -83,7 +83,7 @@ public class BookingService {
     }
 
     /**
-     * TODO: DOCUMENT ME
+     * A helper method that calculates luggage price given the number of checked luggage minus a discount
      * @param checkedLuggage
      * @return
      */
