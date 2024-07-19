@@ -1,7 +1,7 @@
 package com.revature.ams.Booking.dtos;
 
 /**
- * TODO: DOCUMENT ME
+ * BookingRequestDTO stores the minimum fields necessary to search for a booking in the database
  */
 public class BookingRequestDTO {
     private int flightNumber;
