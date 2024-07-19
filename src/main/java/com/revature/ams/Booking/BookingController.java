@@ -9,7 +9,9 @@ import io.javalin.Javalin;
 import io.javalin.http.Context;
 
 /**
- * TODO: DOCUMENT ME
+ * BookingController is the control layer of the booking functional group. It must be injected with bookingService,
+ * memberService, and flightService dependencies at instantiation [all three are declared private final].
+ * The class implements the ams.util.interfaces.Controller interface.
  */
 public class BookingController implements Controller {
     private final BookingService bookingService;
@@ -23,9 +25,10 @@ public class BookingController implements Controller {
     }
 
     /**
-     * TODO: DOCUMENT ME
+     * registerPaths accepts a Javalin object and is called by the front controller to create the
+     * endpoints for the booking HTTP requests.
      *
-     * @param app
+     * @param app Javalin object.
      */
     @Override
     public void registerPaths(Javalin app) {
@@ -36,8 +39,12 @@ public class BookingController implements Controller {
     }
 
     /**
-     * TODO: DOCUMENT ME
-     * @param ctx
+     * postBookFlight accepts a Context object before utilizing context.bodyAsClass to parse a
+     * BookingRequestDTO object before creating a new Booking object by passing the bookingRequestDTO object.
+     * The booking object is then passed to bookingService.bookFlight to create a bookingResponseDTO object.
+     *
+     * If the method is successful it returns a 201 (Created) status as well as a json of the bookingResponseDTO object.
+     * @param ctx Jackson Context object.
      */
     private void postBookFlight(Context ctx) {
         BookingRequestDTO bookingRequestDTO = ctx.bodyAsClass(BookingRequestDTO.class);
@@ -52,8 +59,11 @@ public class BookingController implements Controller {
     }
 
     /**
-     * TODO: DOCUMENT ME
-     * @param ctx
+     * findAllBookings accepts a Context object before parsing the header to get the memberType attribute to
+     * verify that the memberType is set to ADMIN. If it is null or not ADMIN a 403 Forbidden HTTP status is returned,
+     * along with a status message.
+     * If the memberType is ADMIN it responds with a call to bookingService.findAll via ctx.json.
+     * @param ctx Jackson Context object.
      */
     private void findAllBookings(Context ctx){
         String memberType = ctx.header("memberType");
@@ -67,8 +77,10 @@ public class BookingController implements Controller {
     }
 
     /**
-     * TODO: DOCUMENT ME
-     * @param ctx
+     * getMemberBookings accepts a Context object as a parameter and verifies that the member is logged in.
+     * If a member is logged in it will then call bookingService.findAllBookingsByMemberId to return the flights
+     * with that specific memberId via a json response.
+     * @param ctx Jackson Context object.
      */
     private void getMembersBookings(Context ctx) {
         int memberId = loggedInCheck(ctx);
@@ -83,9 +95,11 @@ public class BookingController implements Controller {
     }
 
     /**
-     * TODO: DOCUMENT ME
-     * @param ctx
-     * @return
+     * loggedInCheck accepts a Context object as a parameter and verifies that a member is logged in through its
+     * header. If the memberId is null it responds with a 400 (bad request) status code and a response. Otherwise
+     * it returns the memberId via Integer.parseInt.
+     * @param ctx Jackson Context object.
+     * @return member's memberId as it exists in the context header
      */
     private int loggedInCheck(Context ctx) {
         String headerMemberId = ctx.header("memberId");
