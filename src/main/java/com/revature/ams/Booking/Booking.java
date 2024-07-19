@@ -33,9 +33,10 @@ public class Booking {
     }
 
     /**
-     * TODO: DOCUMENT ME
      *
-     * @param bookingRequestDTO
+     * @param bookingRequestDTO a bookingRequestDTO posted from the user
+     * @output from the limited fields in BookingRequestDTO, create a Flight and Member object that Booking requires
+     * this.flight and this.member are only populated with IDs at this stage
      */
     public Booking(BookingRequestDTO bookingRequestDTO){
         Flight flight = new Flight();
