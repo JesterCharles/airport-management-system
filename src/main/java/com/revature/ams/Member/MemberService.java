@@ -2,12 +2,16 @@ package com.revature.ams.Member;
 
 import com.revature.ams.util.exceptions.DataNotFoundException;
 import com.revature.ams.util.interfaces.Serviceable;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class MemberService implements Serviceable<Member> {
     private final MemberRepository memberRepository;
 
+    @Autowired
     public MemberService(MemberRepository memberRepository){
         this.memberRepository = memberRepository;
     }
@@ -24,6 +28,7 @@ public class MemberService implements Serviceable<Member> {
 
     @Override
     public Member create(Member newMember) {
+        newMember.setType("PASSENGER");
         return memberRepository.create(newMember);
     }
 

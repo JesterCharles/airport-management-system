@@ -2,6 +2,7 @@ package com.revature.ams.util.auth;
 
 import com.revature.ams.Member.Member;
 import com.revature.ams.Member.MemberService;
+import org.springframework.stereotype.Service;
 
 import javax.security.sasl.AuthenticationException;
 
@@ -11,6 +12,7 @@ import javax.security.sasl.AuthenticationException;
  *
  *
  */
+@Service
 public class AuthService {
     private final MemberService memberService; // Assuming a MemberService instance
 

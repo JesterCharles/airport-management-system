@@ -3,6 +3,7 @@ package com.revature.ams.Flight;
 import com.revature.ams.util.ConnectionFactory;
 import com.revature.ams.util.exceptions.DataNotFoundException;
 import com.revature.ams.util.interfaces.Crudable;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.time.OffsetDateTime;
@@ -10,11 +11,11 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.revature.ams.AirportFrontController.logger;
 
 /**
  * Flight repository follows the Data Access Object (DAO) pattern
  */
+@Repository
 public class FlightRepository implements Crudable<Flight>{
 
     /**
@@ -48,7 +49,6 @@ public class FlightRepository implements Crudable<Flight>{
             System.out.println(callableStatement);
 
             int checkUpdate = callableStatement.executeUpdate();
-            logger.info("Updating information, respond given was {}", checkUpdate);
 
 
             return true;
@@ -122,7 +122,6 @@ public class FlightRepository implements Crudable<Flight>{
             preparedStatement.setString(3, newFlight.getDestinationAirport());
             preparedStatement.setShort(4, newFlight.getSeatCount());
 
-            logger.info(preparedStatement.toString());
             int checkInsert = preparedStatement.executeUpdate();
             if (checkInsert == 0){
                 throw new RuntimeException("Flight was not inserted into the database");
@@ -139,22 +138,18 @@ public class FlightRepository implements Crudable<Flight>{
     @Override
     public Flight findById(int number) throws DataNotFoundException{
         try(Connection conn = ConnectionFactory.getConnectionFactory().getConnection()){
-            logger.info("Flight number provided to the Repository by the service is {}", number);
             String sql = "select * from flights where flight_number = ?";
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
 
             preparedStatement.setInt(1, number);
 
 
-            logger.info(preparedStatement.toString());
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if(!resultSet.next()){
-                logger.warn("Information not found within database given flight number {}", number);
                 throw new DataNotFoundException("No flight with that id " + number + " exists in our database.");
             }
             Flight foundFlight = generateFlightFromResultSet(resultSet);
-            logger.info("Sending back flight information {}", foundFlight);
             return foundFlight;
 
         } catch (SQLException e){

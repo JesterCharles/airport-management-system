@@ -3,14 +3,14 @@ package com.revature.ams.Flight;
 import com.revature.ams.util.exceptions.DataNotFoundException;
 import com.revature.ams.util.exceptions.InvalidInputException;
 import com.revature.ams.util.interfaces.Serviceable;
+import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.function.Predicate;
 
-import static com.revature.ams.AirportFrontController.logger;
 
-
+@Service
 public class FlightService implements Serviceable<Flight> {
     // -> lamba: format () -> {}, defining any parameteres used by the function and it's execution. Parenthesis not necessary for oen parameter
     private Predicate<String> isNotEmpty = str -> str != null && !str.isBlank();
@@ -38,9 +38,7 @@ public class FlightService implements Serviceable<Flight> {
 
     @Override
     public Flight findById(int flightNumber) throws DataNotFoundException{
-        logger.info("Flight number was sent to service as {}", flightNumber);
         Flight foundFlight = flightRepository.findById(flightNumber);
-        logger.info("The flight was found and is {}", foundFlight);
         return foundFlight;
     }
 

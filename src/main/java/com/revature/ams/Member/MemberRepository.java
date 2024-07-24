@@ -4,10 +4,12 @@ import com.revature.ams.util.ConnectionFactory;
 import com.revature.ams.util.exceptions.DataNotFoundException;
 import com.revature.ams.util.exceptions.InvalidInputException;
 import com.revature.ams.util.interfaces.Crudable;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.List;
 
+@Repository
 public class MemberRepository implements Crudable<Member> {
     @Override
     public boolean update(Member updatedMember) {
@@ -131,7 +133,7 @@ public class MemberRepository implements Crudable<Member> {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if(!resultSet.next()){
-                throw new DataNotFoundException("No member with that info found");
+                return null;
             }
 
             Member member = new Member();

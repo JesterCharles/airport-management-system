@@ -18,7 +18,7 @@ import static org.mockito.Mockito.*;
 public class FlightServiceTestSuite {
 
     //@Mock // indicates the object needing to be mocked
-    private FlightRepository mockFlightRepository;
+    private FlightRepository mockFlightRepository = new FlightRepository();
 
     //@InjectMocks // inject our FlightRepostory into our FlightService as a mocked objected
     private FlightService sut;
