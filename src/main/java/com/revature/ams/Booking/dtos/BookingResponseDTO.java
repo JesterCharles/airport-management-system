@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 
 
 /**
- * BookingResponseDTO represents a Booking, but only the fields meant to be shown to the user
+ * TODO: DOCUMENT ME
  */
 public class BookingResponseDTO {
     private int bookingId;
@@ -30,7 +30,7 @@ public class BookingResponseDTO {
     }
 
     /**
-     *
+     * 
      * @param booking Booking object that should be pared down to be presented to the user
      * @output new BookingResponseDTO with values copied from the booking
      */
