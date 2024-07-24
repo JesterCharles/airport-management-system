@@ -30,9 +30,9 @@ public class BookingResponseDTO {
     }
 
     /**
-     * TODO: DOCUMENT ME
-     *
-     * @param booking
+     * 
+     * @param booking Booking object that should be pared down to be presented to the user
+     * @output new BookingResponseDTO with values copied from the booking
      */
     public BookingResponseDTO(Booking booking){
         this.flight = booking.getFlight();
