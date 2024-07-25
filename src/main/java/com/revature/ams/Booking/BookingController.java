@@ -3,6 +3,7 @@ package com.revature.ams.Booking;
 
 import com.revature.ams.Booking.dtos.BookingRequestDTO;
 import com.revature.ams.Booking.dtos.BookingResponseDTO;
+import com.revature.ams.Flight.Flight;
 import com.revature.ams.Flight.FlightService;
 import com.revature.ams.Member.Member;
 import com.revature.ams.Member.MemberService;
@@ -45,6 +46,11 @@ public class BookingController {
     private ResponseEntity<BookingResponseDTO> postBookFlight(@RequestBody BookingRequestDTO bookingRequestDTO) {
 
         Booking booking = new Booking(bookingRequestDTO);
+        Member member = memberService.findById(bookingRequestDTO.getMemberId());
+        Flight flight = flightService.findById(bookingRequestDTO.getFlightNumber());
+        booking.setMember(member);
+        booking.setFlight(flight);
+
         BookingResponseDTO bookingResponseDTO = bookingService.bookFlight(booking);
 
         return  ResponseEntity.status(HttpStatus.CREATED).body(bookingResponseDTO);
@@ -57,7 +63,7 @@ public class BookingController {
      * If the memberType is ADMIN it responds with a call to bookingService.findAll via ctx.json.
      */
     @GetMapping
-    private ResponseEntity<List<Booking>> findAllBookings(@RequestHeader("memberType") String memberType){
+    private ResponseEntity<List<Booking>> findAllBookings(@RequestHeader String memberType){
         if(memberType == null || !memberType.equals("ADMIN")){
             throw new UnauthorizedException(" You are not authorized to perform this action");
         }
@@ -69,12 +75,12 @@ public class BookingController {
      * If a member is logged in it will then call bookingService.findAllBookingsByMemberId to return the flights
      * with that specific memberId via a json response.
      */
-    @GetMapping
-    private ResponseEntity<List<BookingResponseDTO>> getMembersBookings(@RequestHeader("memberId") String member_id) {
-        if(member_id == null){
+    @GetMapping("/member")
+    private ResponseEntity<List<BookingResponseDTO>> getMembersBookings(@RequestHeader int memberId) {
+        if(memberId == 0){
             throw new DataNotFoundException("This member does not exist or is not logged in");
         }
-        return ResponseEntity.ok(bookingService.findAllBookingsByMemberId(Integer.parseInt(member_id)));
+        return ResponseEntity.ok(bookingService.findAllBookingsByMemberId(memberId));
     }
 
     // TODO: Implement Me
@@ -88,8 +94,7 @@ public class BookingController {
      * it returns the memberId via Integer.parseInt.
      * @return member's memberId as it exists in the context header
      */
-    @GetMapping
-    private int loggedInCheck(@RequestHeader("memberId") String member_id) {
+    private int loggedInCheck(@RequestHeader String member_id) {
         if(member_id == null){
             throw new DataNotFoundException("This member id does not exist or is not logged in");
         }

@@ -3,6 +3,7 @@ package com.revature.ams.Booking;
 import com.revature.ams.Booking.dtos.BookingResponseDTO;
 import com.revature.ams.util.exceptions.DataNotFoundException;
 import com.revature.ams.util.exceptions.InvalidInputException;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -13,6 +14,7 @@ import java.util.Optional;
  * Handles all the business logic for the BookingController class
  * It contains methods that validate any and all information provided for creating and finding flight bookings
  */
+@Service
 public class BookingService {
     private final BookingRepository bookingRepository;
 
@@ -35,6 +37,8 @@ public class BookingService {
         if(newBooking.getSeatType().name().equals("BUSINESS") || newBooking.getSeatType().name().equals("FIRSTCLASS")){
             newBooking.setCarryOnAllowed(true);
         }
+
+
 
         Optional<Booking> booking = Optional.of(bookingRepository.save(newBooking));
         booking.orElseThrow(() -> new InvalidInputException("Double-Check "));
