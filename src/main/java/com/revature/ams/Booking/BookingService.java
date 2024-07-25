@@ -35,7 +35,7 @@ public class BookingService {
             newBooking.setCarryOnAllowed(true);
         }
 
-        Optional<Booking> booking = bookingRepository.create(newBooking);
+        Optional<Booking> booking = Optional.of(bookingRepository.save(newBooking));
         booking.orElseThrow(() -> new InvalidInputException("Double-Check "));
 
         return booking.map(BookingResponseDTO::new).get();
@@ -51,6 +51,7 @@ public class BookingService {
     }
 
     /**
+     * TODO: FIX ME
      * Finds and returns all flights booked by the member matching the provided member Id
      * Once returned, the list of flights is converted into a Stream of objects
      * Each booking is mapped to a BookingResponseDTO object and then returned as a list
@@ -60,10 +61,11 @@ public class BookingService {
      * @return  A list of BookingResponseDTO objects representing the flights booked by the specified member
      */
     public List<BookingResponseDTO> findAllBookingsByMemberId(int memberId){
-        return bookingRepository.findAllBookingsByMemberId(memberId)
-                .stream()
-                .map(BookingResponseDTO::new)
-                .toList();
+//        return bookingRepository.findAllBookingsByMemberId(memberId)
+//                .stream()
+//                .map(BookingResponseDTO::new)
+//                .toList();
+        return null;
     }
 
     /**

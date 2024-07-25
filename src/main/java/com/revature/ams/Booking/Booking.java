@@ -3,33 +3,39 @@ package com.revature.ams.Booking;
 import com.revature.ams.Booking.dtos.BookingRequestDTO;
 import com.revature.ams.Flight.Flight;
 import com.revature.ams.Member.Member;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "bookings")
 public class Booking {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int bookingId;
+    @ManyToOne
+    @JoinColumn(name = "flight_number")
     private Flight flight;
+
+    @ManyToOne
+    @JoinColumn(name = "member_id")
     private Member member;
+
     private boolean carryOnAllowed;
     private short checkedLuggage;
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "varchar(10) default 'SEATSOPTIONAL'")
     private SeatType seatType;
     private BigDecimal price;
 
     public enum SeatType{
         SEATSOPTIONAL,ECONOMY,BUSINESS,FIRSTCLASS
-    }
-
-    public Booking() {
-    }
-
-    public Booking(int bookingId, Flight flight, Member member, boolean carryOnAllowed, short checkedLuggage, SeatType seatType, BigDecimal price) {
-        this.bookingId = bookingId;
-        this.flight = flight;
-        this.member = member;
-        this.carryOnAllowed = carryOnAllowed;
-        this.checkedLuggage = checkedLuggage;
-        this.seatType = seatType;
-        this.price = price;
     }
 
     /**
@@ -49,72 +55,4 @@ public class Booking {
         this.seatType = SeatType.valueOf(bookingRequestDTO.getSeatType());
     }
 
-    public int getBookingId() {
-        return bookingId;
-    }
-
-    public void setBookingId(int bookingId) {
-        this.bookingId = bookingId;
-    }
-
-    public Flight getFlight() {
-        return flight;
-    }
-
-    public void setFlight(Flight flight) {
-        this.flight = flight;
-    }
-
-    public Member getMember() {
-        return member;
-    }
-
-    public void setMember(Member member) {
-        this.member = member;
-    }
-
-    public boolean isCarryOnAllowed() {
-        return carryOnAllowed;
-    }
-
-    public void setCarryOnAllowed(boolean carryOnAllowed) {
-        this.carryOnAllowed = carryOnAllowed;
-    }
-
-    public short getCheckedLuggage() {
-        return checkedLuggage;
-    }
-
-    public void setCheckedLuggage(short checkedLuggage) {
-        this.checkedLuggage = checkedLuggage;
-    }
-
-    public SeatType getSeatType() {
-        return seatType;
-    }
-
-    public void setSeatType(String seatType) {
-        this.seatType = SeatType.valueOf(seatType);
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
-    @Override
-    public String toString() {
-        return "Booking{" +
-                "bookingId=" + bookingId +
-                ", flight=" + flight +
-                ", member=" + member +
-                ", carryOnAllowed=" + carryOnAllowed +
-                ", checkedLuggage=" + checkedLuggage +
-                ", seatType=" + seatType +
-                ", price=" + price +
-                '}';
-    }
 }
