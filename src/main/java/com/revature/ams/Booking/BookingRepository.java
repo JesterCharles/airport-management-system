@@ -11,6 +11,6 @@ import java.util.Optional;
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Integer> {
     // TODO: Figure out what's going wrong
-//    @Query("FROM Booking where member_id = :memberId")
-//    Optional<List<Booking>> findAllBookingsByMemberId(int memberId);
+    @Query("FROM Booking WHERE member = :memberId")
+    Optional<List<Booking>> findAllBookingsByMemberId(int memberId);
 }

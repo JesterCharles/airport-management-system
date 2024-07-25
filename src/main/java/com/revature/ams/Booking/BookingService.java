@@ -1,6 +1,7 @@
 package com.revature.ams.Booking;
 
 import com.revature.ams.Booking.dtos.BookingResponseDTO;
+import com.revature.ams.util.exceptions.DataNotFoundException;
 import com.revature.ams.util.exceptions.InvalidInputException;
 
 import java.math.BigDecimal;
@@ -61,11 +62,11 @@ public class BookingService {
      * @return  A list of BookingResponseDTO objects representing the flights booked by the specified member
      */
     public List<BookingResponseDTO> findAllBookingsByMemberId(int memberId){
-//        return bookingRepository.findAllBookingsByMemberId(memberId)
-//                .stream()
-//                .map(BookingResponseDTO::new)
-//                .toList();
-        return null;
+        return bookingRepository.findAllBookingsByMemberId(memberId)
+                .orElseThrow(() -> new DataNotFoundException("No bookings with memberId " + memberId))
+                .stream()
+                .map(BookingResponseDTO::new)
+                .toList();
     }
 
     /**
