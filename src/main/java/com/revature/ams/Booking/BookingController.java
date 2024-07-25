@@ -4,13 +4,23 @@ package com.revature.ams.Booking;
 import com.revature.ams.Booking.dtos.BookingRequestDTO;
 import com.revature.ams.Booking.dtos.BookingResponseDTO;
 import com.revature.ams.Flight.FlightService;
+import com.revature.ams.Member.Member;
 import com.revature.ams.Member.MemberService;
+import com.revature.ams.util.exceptions.DataNotFoundException;
+import com.revature.ams.util.exceptions.UnauthorizedException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * BookingController is the control layer of the booking functional group. It must be injected with bookingService,
  * memberService, and flightService dependencies at instantiation [all three are declared private final].
  * The class implements the ams.util.interfaces.Controller interface.
  */
+@RestController
+@RequestMapping("/bookings")
 public class BookingController {
     private final BookingService bookingService;
     private final MemberService memberService;
@@ -31,8 +41,13 @@ public class BookingController {
      *
      * If the method is successful it returns a 201 (Created) status as well as a json of the bookingResponseDTO object.
      */
-    private void postBookFlight() {
+    @PostMapping
+    private ResponseEntity<BookingResponseDTO> postBookFlight(@RequestBody BookingRequestDTO bookingRequestDTO) {
 
+        Booking booking = new Booking(bookingRequestDTO);
+        BookingResponseDTO bookingResponseDTO = bookingService.bookFlight(booking);
+
+        return  ResponseEntity.status(HttpStatus.CREATED).body(bookingResponseDTO);
     }
 
     /**
@@ -41,8 +56,12 @@ public class BookingController {
      * along with a status message.
      * If the memberType is ADMIN it responds with a call to bookingService.findAll via ctx.json.
      */
-    private void findAllBookings(){
-
+    @GetMapping
+    private ResponseEntity<List<Booking>> findAllBookings(@RequestHeader("memberType") String memberType){
+        if(memberType == null || !memberType.equals("ADMIN")){
+            throw new UnauthorizedException(" You are not authorized to perform this action");
+        }
+        return ResponseEntity.ok(bookingService.findAll());
     }
 
     /**
@@ -50,13 +69,17 @@ public class BookingController {
      * If a member is logged in it will then call bookingService.findAllBookingsByMemberId to return the flights
      * with that specific memberId via a json response.
      */
-    private void getMembersBookings() {
-
+    @GetMapping
+    private ResponseEntity<List<BookingResponseDTO>> getMembersBookings(@RequestHeader("memberId") String member_id) {
+        if(member_id == null){
+            throw new DataNotFoundException("This member does not exist or is not logged in");
+        }
+        return ResponseEntity.ok(bookingService.findAllBookingsByMemberId(Integer.parseInt(member_id)));
     }
 
     // TODO: Implement Me
-    private void deleteBooking() {
-
+    @DeleteMapping
+    private void deleteBooking(@RequestBody Booking booking) {
     }
 
     /**
@@ -65,10 +88,12 @@ public class BookingController {
      * it returns the memberId via Integer.parseInt.
      * @return member's memberId as it exists in the context header
      */
-    private int loggedInCheck() {
-
-            return -1;
-
+    @GetMapping
+    private int loggedInCheck(@RequestHeader("memberId") String member_id) {
+        if(member_id == null){
+            throw new DataNotFoundException("This member id does not exist or is not logged in");
+        }
+            return Integer.parseInt(member_id);
     }
 
 }
