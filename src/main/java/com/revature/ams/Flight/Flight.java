@@ -34,4 +34,10 @@ public class Flight {
     private Member pilot;
     private int airline;
 
+    public Flight(int flightNumber, String originAirport, String destinationAirport, short seatCount) {
+        this.flightNumber = flightNumber;
+        this.originAirport = originAirport;
+        this.destinationAirport = destinationAirport;
+        this.seatCount = seatCount;
+    }
 }

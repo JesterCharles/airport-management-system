@@ -33,6 +33,7 @@ public class MemberService implements Serviceable<Member> {
         return memberRepository.save(newMember);
     }
 
+    @Override
     public boolean delete(Member removedMemeber) {
         memberRepository.delete(removedMemeber);
         return true;

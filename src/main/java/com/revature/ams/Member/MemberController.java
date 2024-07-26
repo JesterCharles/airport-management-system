@@ -1,6 +1,7 @@
 package com.revature.ams.Member;
 
 import com.revature.ams.util.exceptions.DataNotFoundException;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class MemberController{
     }
 
     @PostMapping
-    private ResponseEntity<Member> postNewMember(@RequestBody Member member) {
+    private ResponseEntity<Member> postNewMember(@Valid @RequestBody Member member) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(memberService.create(member));
@@ -30,13 +31,13 @@ public class MemberController{
     }
 
     @DeleteMapping
-    private ResponseEntity<Void> deleteMember(@RequestBody Member member) {
+    private ResponseEntity<Void> deleteMember(@Valid @RequestBody Member member) {
         memberService.delete(member);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping
-    private ResponseEntity<Void> putUpdateMember(@RequestBody Member member) {
+    private ResponseEntity<Void> putUpdateMember(@Valid @RequestBody Member member) {
         memberService.update(member);
         return ResponseEntity.noContent().build();
     }

@@ -45,6 +45,7 @@ public class FlightService implements Serviceable<Flight> {
     }
 
     @Transactional
+    @Override
     public boolean update(Flight flightToUpdate) throws InvalidInputException {
         validateFullFlight(flightToUpdate);
         Flight foundFlight = flightRepository.findById(flightToUpdate.getFlightNumber())
@@ -57,6 +58,7 @@ public class FlightService implements Serviceable<Flight> {
     }
 
 
+    @Override
     public boolean delete(Flight flight){
         validateFullFlight(flight);
         flightRepository.delete(flight);

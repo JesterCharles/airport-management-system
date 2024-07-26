@@ -2176,3 +2176,33 @@ Caused by: org.hibernate.query.sqm.PathElementException: Could not resolve attri
 2024-07-25 14:56:02,882 INFO  [main] o.s.o.j.AbstractEntityManagerFactoryBean: Closing JPA EntityManagerFactory for persistence unit 'default'
 2024-07-25 14:56:02,884 INFO  [main] c.z.h.HikariDataSource: HikariPool-1 - Shutdown initiated...
 2024-07-25 14:56:03,188 INFO  [main] c.z.h.HikariDataSource: HikariPool-1 - Shutdown completed.
+2024-07-25 14:56:09,484 INFO  [background-preinit] o.h.v.i.util.Version: HV000001: Hibernate Validator 8.0.1.Final
+2024-07-25 14:56:09,554 INFO  [main] o.s.b.StartupInfoLogger: Starting AirportManagementSystemApplication using Java 17.0.11 with PID 27224 (C:\Users\CharlesJester\IdeaProjects\airport-management-system\target\classes started by CharlesJester in C:\Users\CharlesJester\IdeaProjects\airport-management-system)
+2024-07-25 14:56:09,555 INFO  [main] o.s.b.SpringApplication: No active profile set, falling back to 1 default profile: "default"
+2024-07-25 14:56:11,082 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate: Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-07-25 14:56:11,192 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate: Finished Spring Data repository scanning in 94 ms. Found 3 JPA repository interfaces.
+2024-07-25 14:56:12,705 INFO  [main] o.s.b.w.e.t.TomcatWebServer: Tomcat initialized with port 8080 (http)
+2024-07-25 14:56:12,721 INFO  [main] o.a.j.l.DirectJDKLog: Initializing ProtocolHandler ["http-nio-8080"]
+2024-07-25 14:56:12,724 INFO  [main] o.a.j.l.DirectJDKLog: Starting service [Tomcat]
+2024-07-25 14:56:12,725 INFO  [main] o.a.j.l.DirectJDKLog: Starting Servlet engine: [Apache Tomcat/10.1.26]
+2024-07-25 14:56:12,886 INFO  [main] o.a.j.l.DirectJDKLog: Initializing Spring embedded WebApplicationContext
+2024-07-25 14:56:12,886 INFO  [main] o.s.b.w.s.c.ServletWebServerApplicationContext: Root WebApplicationContext: initialization completed in 3238 ms
+2024-07-25 14:56:13,842 INFO  [main] o.h.j.i.u.LogHelper: HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-07-25 14:56:14,077 INFO  [main] o.hibernate.Version: HHH000412: Hibernate ORM core version 6.5.2.Final
+2024-07-25 14:56:14,238 INFO  [main] o.h.c.i.RegionFactoryInitiator: HHH000026: Second-level cache disabled
+2024-07-25 14:56:14,722 INFO  [main] o.s.o.j.p.SpringPersistenceUnitInfo: No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-07-25 14:56:14,751 INFO  [main] c.z.h.HikariDataSource: HikariPool-1 - Starting...
+2024-07-25 14:56:15,352 INFO  [main] c.z.h.p.HikariPool: HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@2270f58d
+2024-07-25 14:56:15,353 INFO  [main] c.z.h.HikariDataSource: HikariPool-1 - Start completed.
+2024-07-25 14:56:15,408 WARN  [main] o.h.e.j.d.i.DialectFactoryImpl: HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-07-25 14:56:16,421 INFO  [main] o.h.e.t.j.p.i.JtaPlatformInitiator: HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-07-25 14:56:16,959 INFO  [main] o.s.o.j.AbstractEntityManagerFactoryBean: Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-07-25 14:56:17,484 INFO  [main] o.s.d.j.r.q.QueryEnhancerFactory: Hibernate is in classpath; If applicable, HQL parser will be used.
+2024-07-25 14:56:18,323 WARN  [main] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration: spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-07-25 14:56:19,969 INFO  [main] o.s.b.a.e.w.EndpointLinksResolver: Exposing 1 endpoint beneath base path '/actuator'
+2024-07-25 14:56:20,114 INFO  [main] o.a.j.l.DirectJDKLog: Starting ProtocolHandler ["http-nio-8080"]
+2024-07-25 14:56:20,164 INFO  [main] o.s.b.w.e.t.TomcatWebServer: Tomcat started on port 8080 (http) with context path '/'
+2024-07-25 14:56:20,181 INFO  [main] o.s.b.StartupInfoLogger: Started AirportManagementSystemApplication in 11.091 seconds (process running for 11.906)
+2024-07-25 14:56:33,047 INFO  [http-nio-8080-exec-1] o.a.j.l.DirectJDKLog: Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-07-25 14:56:33,048 INFO  [http-nio-8080-exec-1] o.s.w.s.FrameworkServlet: Initializing Servlet 'dispatcherServlet'
+2024-07-25 14:56:33,049 INFO  [http-nio-8080-exec-1] o.s.w.s.FrameworkServlet: Completed initialization in 1 ms
