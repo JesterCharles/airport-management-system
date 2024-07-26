@@ -2,12 +2,17 @@ package com.revature.ams.Member;
 
 import com.revature.ams.util.exceptions.DataNotFoundException;
 import com.revature.ams.util.interfaces.Serviceable;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import javax.security.sasl.AuthenticationException;
 import java.util.List;
 
+@Service
 public class MemberService implements Serviceable<Member> {
     private final MemberRepository memberRepository;
 
+    @Autowired
     public MemberService(MemberRepository memberRepository){
         this.memberRepository = memberRepository;
     }
@@ -19,16 +24,19 @@ public class MemberService implements Serviceable<Member> {
 
     @Override
     public Member findById(int memberId) {
-        return memberRepository.findById(memberId);
+        return memberRepository.findById(memberId).orElseThrow(() -> new DataNotFoundException("Nothing in the database with ID of " + memberId));
     }
 
     @Override
     public Member create(Member newMember) {
-        return memberRepository.create(newMember);
+        newMember.setType(Member.MemberType.valueOf("PASSENGER"));
+        return memberRepository.save(newMember);
     }
 
+    @Override
     public boolean delete(Member removedMemeber) {
-        return memberRepository.delete(removedMemeber);
+        memberRepository.delete(removedMemeber);
+        return true;
     }
 
     /**
@@ -39,8 +47,8 @@ public class MemberService implements Serviceable<Member> {
      * @param password - String
      * @return - Member object, if no member found it will return null
      */
-    public Member findByEmailAndPassword(String email, String password){
-        return memberRepository.findByEmailAndPassword(email, password);
+    public Member findByEmailAndPassword(String email, String password) throws AuthenticationException {
+        return memberRepository.findByEmailAndPassword(email, password).orElseThrow(() -> new AuthenticationException("Invalid credentials provided"));
     }
 
     /**
@@ -52,7 +60,8 @@ public class MemberService implements Serviceable<Member> {
      * @throws DataNotFoundException - MemberId provided doesn't match with anything in the database
      */
     public boolean update(Member updatedMember) {
-        return memberRepository.update(updatedMember);
+        memberRepository.save(updatedMember);
+        return true;
     }
 
 }

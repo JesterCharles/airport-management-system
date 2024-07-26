@@ -1,7 +1,10 @@
 package com.revature.ams.Booking;
 
 import com.revature.ams.Booking.dtos.BookingResponseDTO;
+import com.revature.ams.util.exceptions.DataNotFoundException;
 import com.revature.ams.util.exceptions.InvalidInputException;
+import com.revature.ams.util.interfaces.Serviceable;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -12,7 +15,8 @@ import java.util.Optional;
  * Handles all the business logic for the BookingController class
  * It contains methods that validate any and all information provided for creating and finding flight bookings
  */
-public class BookingService {
+@Service
+public class BookingService implements Serviceable<Booking> {
     private final BookingRepository bookingRepository;
 
     public BookingService(BookingRepository bookingRepository) {
@@ -35,7 +39,9 @@ public class BookingService {
             newBooking.setCarryOnAllowed(true);
         }
 
-        Optional<Booking> booking = bookingRepository.create(newBooking);
+
+
+        Optional<Booking> booking = Optional.of(bookingRepository.save(newBooking));
         booking.orElseThrow(() -> new InvalidInputException("Double-Check "));
 
         return booking.map(BookingResponseDTO::new).get();
@@ -46,8 +52,19 @@ public class BookingService {
      *
      * @return A list of all the booked flights and their corresponding information
      */
+    @Override
     public List<Booking> findAll() {
         return bookingRepository.findAll();
+    }
+
+    @Override
+    public Booking create(Booking newObject) {
+        return null;
+    }
+
+    @Override
+    public Booking findById(int number) {
+        return null;
     }
 
     /**
@@ -59,8 +76,10 @@ public class BookingService {
      *
      * @return  A list of BookingResponseDTO objects representing the flights booked by the specified member
      */
+
     public List<BookingResponseDTO> findAllBookingsByMemberId(int memberId){
         return bookingRepository.findAllBookingsByMemberId(memberId)
+                .orElseThrow(() -> new DataNotFoundException("No bookings with memberId " + memberId))
                 .stream()
                 .map(BookingResponseDTO::new)
                 .toList();
@@ -109,5 +128,15 @@ public class BookingService {
         BigDecimal discountMultiplier = BigDecimal.ONE.subtract(new BigDecimal(checkedLuggage).divide(new BigDecimal(4), 2, RoundingMode.HALF_UP));
 
         return baseLuggagePrice.multiply(discountMultiplier);
+    }
+
+    @Override
+    public boolean update(Booking updatedObject) {
+        return false;
+    }
+
+    @Override
+    public boolean delete(Booking removedObject) {
+        return false;
     }
 }

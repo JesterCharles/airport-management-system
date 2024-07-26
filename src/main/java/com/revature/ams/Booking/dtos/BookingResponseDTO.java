@@ -4,6 +4,7 @@ import com.revature.ams.Booking.Booking;
 import com.revature.ams.Flight.Flight;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 
 /**
@@ -41,6 +42,9 @@ public class BookingResponseDTO {
         this.seatType = booking.getSeatType().name();
         this.price = booking.getPrice();
         this.checkedLuggage = booking.getCheckedLuggage();
+    }
+
+    public BookingResponseDTO(List<Booking> bookings) {
     }
 
     public int getBookingId() {

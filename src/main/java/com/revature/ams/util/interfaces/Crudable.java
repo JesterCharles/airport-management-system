@@ -1,6 +1,6 @@
 package com.revature.ams.util.interfaces;
 
-public interface Crudable<O> extends Serviceable<O>{
+public interface Crudable<O>{
     boolean update(O updatedObject);
     boolean delete(O removedObject);
 }

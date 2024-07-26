@@ -3,14 +3,15 @@ package com.revature.ams.Flight;
 import com.revature.ams.util.exceptions.DataNotFoundException;
 import com.revature.ams.util.exceptions.InvalidInputException;
 import com.revature.ams.util.interfaces.Serviceable;
+import jakarta.transaction.Transactional;
+import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.function.Predicate;
 
-import static com.revature.ams.AirportFrontController.logger;
 
-
+@Service
 public class FlightService implements Serviceable<Flight> {
     // -> lamba: format () -> {}, defining any parameteres used by the function and it's execution. Parenthesis not necessary for oen parameter
     private Predicate<String> isNotEmpty = str -> str != null && !str.isBlank();
@@ -33,30 +34,35 @@ public class FlightService implements Serviceable<Flight> {
     @Override
     public Flight create(Flight flight) throws InvalidInputException {
         validateMinFlight(flight);
-        return flightRepository.create(flight);
+        return flightRepository.save(flight);
     }
 
     @Override
     public Flight findById(int flightNumber) throws DataNotFoundException{
-        logger.info("Flight number was sent to service as {}", flightNumber);
-        Flight foundFlight = flightRepository.findById(flightNumber);
-        logger.info("The flight was found and is {}", foundFlight);
+        Flight foundFlight = flightRepository.findById(flightNumber)
+                .orElseThrow(() -> new DataNotFoundException("No flight with the ID of " + flightNumber));
         return foundFlight;
     }
 
+    @Transactional
+    @Override
     public boolean update(Flight flightToUpdate) throws InvalidInputException {
         validateFullFlight(flightToUpdate);
-        Flight foundFlight = flightRepository.findById(flightToUpdate.getFlightNumber());
+        Flight foundFlight = flightRepository.findById(flightToUpdate.getFlightNumber())
+                .orElseThrow(() -> new DataNotFoundException("No flight with the ID of " + flightToUpdate.getFlightNumber()));
         if(foundFlight == null){
             throw new DataNotFoundException("Flight with that ID not in database, please check again");
         }
-        return flightRepository.update(flightToUpdate);
+        flightRepository.saveAndFlush(flightToUpdate); // helps stop dirty-reads
+        return true;
     }
 
 
+    @Override
     public boolean delete(Flight flight){
         validateFullFlight(flight);
-        return flightRepository.delete(flight);
+        flightRepository.delete(flight);
+        return true;
     }
 
     public boolean isEmpty(Flight[] arr) { // defining the parameter of a string array to be included when executing this mehtod
@@ -119,7 +125,7 @@ public class FlightService implements Serviceable<Flight> {
             throw new InvalidInputException("Time arrival is before time of departure");
         }
 
-        if (flight.getPilot() < 100000 || flight.getPilot() > 999999) {
+        if (flight.getPilot().getMemberId() < 100000 || flight.getPilot().getMemberId() > 999999) {
             throw new InvalidInputException("Pilot IDs are 6 digits long");
         }
 

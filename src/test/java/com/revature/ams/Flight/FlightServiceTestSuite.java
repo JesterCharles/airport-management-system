@@ -1,13 +1,16 @@
 package com.revature.ams.Flight;
 
+import com.revature.ams.Member.Member;
 import com.revature.ams.util.exceptions.DataNotFoundException;
 import com.revature.ams.util.exceptions.InvalidInputException;
 import com.revature.ams.util.exceptions.NoSpaceException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -15,33 +18,29 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 public class FlightServiceTestSuite {
 
-    //@Mock // indicates the object needing to be mocked
+    @Mock // indicates the object needing to be mocked
     private FlightRepository mockFlightRepository;
 
-    //@InjectMocks // inject our FlightRepostory into our FlightService as a mocked objected
+    @InjectMocks // inject our FlightRepostory into our FlightService as a mocked objected
     private FlightService sut;
 
-    @BeforeEach
-    public void setUp(){
-        mockFlightRepository = mock(FlightRepository.class);
-        sut = new FlightService(mockFlightRepository);
-    }
 
     @Test
     public void testCreate_ValidMinData() throws InvalidInputException {
         // AAA
         // Arrange - what do you need? Any objects created for testing purposes?
         Flight validFlight = new Flight(999998, "PHL", "BOS", (short) 123);
-        when(mockFlightRepository.create(validFlight)).thenReturn(validFlight);
+        when(mockFlightRepository.save(validFlight)).thenReturn(validFlight);
 
         // Action - the method invocation
         Flight returnedFlight = sut.create(validFlight);
 
         // Assert - making sure the action returns as excepted
         assertEquals(validFlight, returnedFlight);
-        verify(mockFlightRepository, times(1)).create(validFlight);
+        verify(mockFlightRepository, times(1)).save(validFlight);
 
     }
 
@@ -99,19 +98,18 @@ public class FlightServiceTestSuite {
     public void testUpdate_ValidFlight(){
         // AAA
         Flight validFlight = new Flight(123456, "PHL", "BOS", OffsetDateTime.now().plusHours(2),
-                OffsetDateTime.now().plusDays(1), (short) 123, 123456, 1234);
-        when(mockFlightRepository.update(validFlight)).thenReturn(true);
+                OffsetDateTime.now().plusDays(1), (short) 123, new Member(), 1234);
+        when(mockFlightRepository.save(validFlight)).thenReturn(validFlight);
 
         boolean returnedUpdate = sut.update(validFlight);
         assertTrue(returnedUpdate);
-        verify(mockFlightRepository, times(1)).update(validFlight);
+        verify(mockFlightRepository, times(1)).save(validFlight);
     }
 
     @Test
     public void testDelete_validFlightNumber(){
         Flight validFlight = new Flight(123456, "PHL", "BOS", OffsetDateTime.now().plusHours(2),
-                OffsetDateTime.now().plusDays(1), (short) 123, 123456, 1234);
-        when(mockFlightRepository.delete(validFlight)).thenReturn(true);
+                OffsetDateTime.now().plusDays(1), (short) 123, new Member(), 1234);
 
         boolean actual = sut.delete(validFlight);
 

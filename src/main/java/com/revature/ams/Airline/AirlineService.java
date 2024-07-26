@@ -23,4 +23,14 @@ public class AirlineService implements Serviceable<Airline> {
     public Airline filterByAirline(){
         return null;
     }
+
+    @Override
+    public boolean update(Airline updatedObject) {
+        return false;
+    }
+
+    @Override
+    public boolean delete(Airline removedObject) {
+        return false;
+    }
 }
