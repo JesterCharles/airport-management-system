@@ -9,7 +9,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import javax.security.sasl.AuthenticationException;
 
-@CrossOrigin(exposedHeaders = {"memberId", "memberType"}, origins = "http://127.0.0.1:5500/")
+@CrossOrigin(exposedHeaders = {"memberId", "memberType"}, origins = {"http://localhost:5173/", "http://ams-aws-frontend.s3-website.us-east-2.amazonaws.com/"})
 @RestController
 @RequestMapping("/auth")
 public class AuthController  {
