@@ -398,7 +398,7 @@ on bookings
 for each row
 execute function generate_carry_on();
 
-select * from bookings ;
+select * from members ;
 
 
 
