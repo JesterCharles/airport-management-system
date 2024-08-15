@@ -1,6 +1,10 @@
 pipeline {
   agent any
 
+  environment{
+    postgresPass = 'postgresPass'
+  }
+
   stages {
 
     stage('Build') {
