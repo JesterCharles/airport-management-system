@@ -9,14 +9,14 @@ pipeline {
 
     stage('Build') {
       steps {
-        sh 'docker build -t jestercharles/ams-backend:1.0.0 .'
+        sh('docker-compose build --build-arg postgresPass="$postgresPass"')
         sh 'docker push jestercharles/ams-backend:1.0.0'
       }
     }
 
     stage('Deploy') {
       steps {
-        sh('docker run -p 8081:8080 jestercharles/ams-backend:1.0.0 -e postgresPass="$postgresPass" -v test')
+        sh 'docker-compose up -d'
       }
     }
 
