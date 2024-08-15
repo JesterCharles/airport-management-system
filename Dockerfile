@@ -1,5 +1,5 @@
 # FROM is building the base image with all the required language development kits for java specifically here
-FROM openjdk:17-alpine
+FROM openjdk:17
 
 # a place to store all of our app data by default, it's common practice
 WORKDIR app/

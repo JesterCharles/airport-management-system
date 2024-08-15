@@ -16,7 +16,7 @@ pipeline {
 
     stage('Deploy') {
       steps {
-        sh('docker run -p 8081:9999 jestercharles/ams-backend:1.0.0 -e postgresPass="$postgresPass" -v test:for:now')
+        sh('docker run -p 8081:8080 jestercharles/ams-backend:1.0.0 -e postgresPass="$postgresPass" -v test')
       }
     }
 
