@@ -1,7 +1,7 @@
 pipeline {
 
   environment {
-    dockerHubId = 'dockerHubId'
+    postgresPass = 'postgresPass'
   }
   agent any
 
