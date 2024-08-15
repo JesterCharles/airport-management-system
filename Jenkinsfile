@@ -11,7 +11,6 @@ pipeline {
       steps {
         sh 'docker build -t jestercharles/ams-backend:1.0.0 .'
         sh 'docker push jestercharles/ams-backend:1.0.0'
-        }
       }
     }
 
