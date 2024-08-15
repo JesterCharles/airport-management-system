@@ -2,7 +2,7 @@ pipeline {
   agent any
 
   environment{
-    postgresPass = 'postgresPass'
+    postgresPass = credentials('postgresPass')
   }
 
   stages {
